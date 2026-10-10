@@ -40,11 +40,11 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    cursor: url('imagenes/joystick.png') 16 16, auto;
+    cursor: url('/imagenes/joystick.png') 16 16, auto;
 }
 
 a, button, .btn {
-    cursor: url('imagenes/joystick.png') 16 16, pointer;
+    cursor: url('/imagenes/joystick.png') 16 16, pointer;
 }
 
 main {

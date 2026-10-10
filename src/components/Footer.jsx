@@ -1,9 +1,9 @@
-export default function Footer(){
+export default function Footer() {
     const anioActual = new Date().getFullYear();
 
-    return(
-        <Footer>
+    return (
+        <footer>
             <p>&copy; {anioActual} Hobic - Todos los derechos reservados</p>
-        </Footer>
+        </footer>
     );
 }

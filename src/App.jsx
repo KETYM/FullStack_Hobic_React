@@ -10,6 +10,7 @@ import Admin from './pages/Admin';
 import InicioSesion from './pages/InicioSesion';
 import AdminUsuarios from './pages/AdminUsuarios'; 
 import PanelVendedor from './pages/PanelVendedor';
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
       <CartProvider>
         <BrowserRouter>
           <Header />
-          <Routes>
+          <main>
+            <Routes>
             {/* Rutas Públicas: Cualquier persona puede verlas */}
             <Route path="/" element={<Inicio />} />
             <Route path="/catalogo" element={<Catalogo />} />
@@ -35,6 +37,8 @@ function App() {
                 <Route path="/adminUsuarios" element={<AdminUsuarios />} />
             </Route>
           </Routes>
+          </main>
+          <Footer/>
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>

@@ -739,11 +739,11 @@ body.pattern-checker {
     }
 }
 body.pattern-grid, body.pattern-dots, body.pattern-checker {
-    cursor: url('../imagenes/joystick.png') 16 16, auto;
+    cursor: url('/imagenes/joystick.png') 16 16, auto;
 }
 
 a, button, .btn {
-    cursor: url('../imagenes/joystick.png') 16 16, pointer;
+    cursor: url('/imagenes/joystick.png') 16 16, pointer;
 }
 .nav-search-box {
     display: flex !important;
