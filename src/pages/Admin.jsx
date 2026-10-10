@@ -1,38 +1,22 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 // import { useAuth } from '../context/AuthContext'; // Descomenta esto para registrar qué admin hace los cambios
 
 export default function Admin() {
-    const [inventario, setInventario] = useState([]);
+    // Lazy initializer: lee localStorage solo en el primer render.
+    // localStorage es síncrono, no hace falta un useEffect para la carga inicial.
+    const [inventario, setInventario] = useState(() => {
+        try {
+            return JSON.parse(localStorage.getItem("inventarioHobic")) || [];
+        } catch {
+            return [];
+        }
+    });
     const [loading, setLoading] = useState(false);
     const [alerta, setAlerta] = useState({ tipo: '', mensaje: '' });
-    
+
     const estadoInicialForm = { id: '', nombre: '', precio: '', imagen: '', categoria: '', descuento: '' };
     const [formData, setFormData] = useState(estadoInicialForm);
     const [modoEdicion, setModoEdicion] = useState(false);
-
-    // 1. Carga inicial asíncrona (Preparado para API REST)
-    useEffect(() => {
-        cargarInventario();
-    }, []);
-
-    const cargarInventario = async () => {
-        setLoading(true);
-        try {
-            // 🔗 CIBERSEGURIDAD: Aquí irá tu llamada GET a Spring Boot:
-            // const response = await fetch('https://api.hobic.cl/v1/productos', {
-            //     headers: { 'Authorization': `Bearer ${sessionStorage.getItem('token_seguro')}` }
-            // });
-            // const data = await response.json();
-            
-            // Simulación temporal mientras construyes el backend:
-            const inventarioGuardado = JSON.parse(localStorage.getItem("inventarioHobic")) || [];
-            setInventario(inventarioGuardado);
-        } catch (error) {
-            mostrarAlerta('danger', 'Error de conexión al cargar el inventario.');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     // 2. Manejo seguro de inputs (Previene tipos de datos incorrectos)
     const handleChange = (e) => {
@@ -60,8 +44,8 @@ export default function Admin() {
         }
         // Validación básica de URL para mitigar XSS a través de src de imágenes
         if (!formData.imagen.startsWith('http') && !formData.imagen.startsWith('/')) {
-             mostrarAlerta('warning', 'La URL de la imagen no es válida.');
-             return false;
+            mostrarAlerta('warning', 'La URL de la imagen no es válida.');
+            return false;
         }
         return true;
     };
@@ -69,7 +53,7 @@ export default function Admin() {
     // 4. Guardar o Actualizar (Preparado para POST/PUT)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!validarFormulario()) return;
 
         setLoading(true);
@@ -83,7 +67,7 @@ export default function Admin() {
             } else {
                 // 🔗 CIBERSEGURIDAD: Aquí irá tu llamada POST a Spring Boot
                 // El backend debe ser quien asigne el ID seguro (UUID), no el frontend con Date.now()
-                const nuevoProducto = { ...formData, id: crypto.randomUUID() }; 
+                const nuevoProducto = { ...formData, id: crypto.randomUUID() };
                 const nuevoInventario = [...inventario, nuevoProducto];
                 setInventario(nuevoInventario);
                 localStorage.setItem("inventarioHobic", JSON.stringify(nuevoInventario)); // Temporal
@@ -91,7 +75,7 @@ export default function Admin() {
             }
             setFormData(estadoInicialForm);
             setModoEdicion(false);
-        } catch (error) {
+        } catch {
             mostrarAlerta('danger', 'Error al procesar la solicitud.');
         } finally {
             setLoading(false);
@@ -114,7 +98,7 @@ export default function Admin() {
                 setInventario(inventarioFiltrado);
                 localStorage.setItem("inventarioHobic", JSON.stringify(inventarioFiltrado)); // Temporal
                 mostrarAlerta('success', 'Producto eliminado.');
-            } catch (error) {
+            } catch {
                 mostrarAlerta('danger', 'Error al eliminar el producto.');
             } finally {
                 setLoading(false);
@@ -130,7 +114,7 @@ export default function Admin() {
     return (
         <div className="container mt-5">
             <h2 className="mb-4 text-center">Administración de Inventario</h2>
-            
+
             {/* Sistema de Alertas Dinámico */}
             {alerta.mensaje && (
                 <div className={`alert alert-${alerta.tipo} alert-dismissible fade show`} role="alert">

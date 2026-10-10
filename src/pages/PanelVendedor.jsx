@@ -1,19 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+// Fuente de datos estática: definida FUERA del componente.
+const MOCK_PEDIDOS = [
+    { id: 'PED-001', cliente: 'Juan Pérez', total: 25000, fecha: '2026-10-07', estado: 'Pendiente' },
+    { id: 'PED-002', cliente: 'María Silva', total: 42000, fecha: '2026-10-06', estado: 'Preparando' },
+    { id: 'PED-003', cliente: 'Carlos López', total: 15000, fecha: '2026-10-05', estado: 'Enviado' }
+];
 
 export default function PanelVendedor() {
-    const [pedidos, setPedidos] = useState([]);
-
-    useEffect(() => {
-        const mockPedidos = [
-            { id: 'PED-001', cliente: 'Juan Pérez', total: 25000, fecha: '2026-10-07', estado: 'Pendiente' },
-            { id: 'PED-002', cliente: 'María Silva', total: 42000, fecha: '2026-10-06', estado: 'Preparando' },
-            { id: 'PED-003', cliente: 'Carlos López', total: 15000, fecha: '2026-10-05', estado: 'Enviado' }
-        ];
-        setPedidos(mockPedidos);
-    }, []);
+    // Lazy initializer: se ejecuta solo en el primer render
+    const [pedidos, setPedidos] = useState(() => MOCK_PEDIDOS);
 
     const actualizarEstado = (id, nuevoEstado) => {
-        setPedidos(pedidos.map(pedido => 
+        setPedidos(pedidos.map(pedido =>
             pedido.id === id ? { ...pedido, estado: nuevoEstado } : pedido
         ));
     };
@@ -21,7 +20,7 @@ export default function PanelVendedor() {
     return (
         <div className="container mt-5 mb-5">
             <h2 className="mb-4 text-center">Panel de Ventas y Despachos</h2>
-            
+
             <div className="row mb-4">
                 <div className="col-md-4">
                     <div className="card text-white bg-primary shadow-sm h-100">
@@ -69,15 +68,14 @@ export default function PanelVendedor() {
                                 <td>{pedido.fecha}</td>
                                 <td>${pedido.total.toLocaleString('es-CL')}</td>
                                 <td>
-                                    <span className={`badge ${
-                                        pedido.estado === 'Pendiente' ? 'bg-danger' : 
-                                        pedido.estado === 'Preparando' ? 'bg-warning text-dark' : 'bg-success'
-                                    }`}>
+                                    <span className={`badge ${pedido.estado === 'Pendiente' ? 'bg-danger' :
+                                            pedido.estado === 'Preparando' ? 'bg-warning text-dark' : 'bg-success'
+                                        }`}>
                                         {pedido.estado}
                                     </span>
                                 </td>
                                 <td>
-                                    <select 
+                                    <select
                                         className="form-select form-select-sm d-inline-block w-auto"
                                         value={pedido.estado}
                                         onChange={(e) => actualizarEstado(pedido.id, e.target.value)}

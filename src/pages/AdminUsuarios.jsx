@@ -1,17 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+// Fuente de datos estática: definida FUERA del componente.
+// Así no se recrea en cada render y el componente queda más liviano.
+const MOCK_USUARIOS = [
+    { id: 'u1', nombre: 'Admin Principal', correo: 'admin@hobic.cl', rol: 'admin', fecha: '2026-10-01' },
+    { id: 'u2', nombre: 'Juan Pérez', correo: 'juan@gmail.com', rol: 'cliente', fecha: '2026-10-05' },
+    { id: 'u3', nombre: 'María Silva', correo: 'maria@hotmail.com', rol: 'cliente', fecha: '2026-10-06' }
+];
 
 export default function AdminUsuarios() {
-    const [usuarios, setUsuarios] = useState([]);
-
-    useEffect(() => {
-        // solicitando la lista de usuarios. Por ahora, simulamos una pequeña base de datos.
-        const mockUsuarios = [
-            { id: 'u1', nombre: 'Admin Principal', correo: 'admin@hobic.cl', rol: 'admin', fecha: '2026-10-01' },
-            { id: 'u2', nombre: 'Juan Pérez', correo: 'juan@gmail.com', rol: 'cliente', fecha: '2026-10-05' },
-            { id: 'u3', nombre: 'María Silva', correo: 'maria@hotmail.com', rol: 'cliente', fecha: '2026-10-06' }
-        ];
-        setUsuarios(mockUsuarios);
-    }, []);
+    // Lazy initializer: la función () => MOCK_USUARIOS solo se ejecuta
+    // en el PRIMER render. Estado inicial real, sin render extra.
+    const [usuarios, setUsuarios] = useState(() => MOCK_USUARIOS);
 
     const eliminarUsuario = (id) => {
         if (window.confirm("¿Estás seguro de que deseas revocar el acceso a este usuario?")) {
@@ -22,7 +22,7 @@ export default function AdminUsuarios() {
     return (
         <div className="container mt-5 mb-5">
             <h2 className="mb-4 text-center">Gestión de Usuarios</h2>
-            
+
             <div className="card shadow-sm p-4 table-responsive">
                 <table className="table table-hover align-middle text-center">
                     <thead className="table-dark">
@@ -46,8 +46,8 @@ export default function AdminUsuarios() {
                                 </td>
                                 <td>{user.fecha}</td>
                                 <td>
-                                    <button 
-                                        className="btn btn-sm btn-outline-danger" 
+                                    <button
+                                        className="btn btn-sm btn-outline-danger"
                                         onClick={() => eliminarUsuario(user.id)}
                                         disabled={user.rol === 'admin'} // Evita que el admin se borre a sí mismo
                                     >

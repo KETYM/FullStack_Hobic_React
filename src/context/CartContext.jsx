@@ -2,6 +2,7 @@ import { createContext, useState, useEffect, useContext} from 'react';
 
 const CartContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components -- por convención, el contexto exporta su hook junto al Provider
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({children}) => {
@@ -9,7 +10,7 @@ export const CartProvider = ({children}) => {
         try {
             const carritoGuardado = localStorage.getItem('carritoHobic');
             return carritoGuardado ? JSON.parse(carritoGuardado) : [];
-        } catch (error) {
+        } catch {
             return [];
         }
     });

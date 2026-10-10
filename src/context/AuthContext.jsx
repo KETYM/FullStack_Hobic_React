@@ -1,25 +1,25 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useState, useContext } from 'react';
 
 const AuthContext = createContext();
 
+// eslint-disable-next-line react-refresh/only-export-components -- por convención, el contexto exporta su hook junto al Provider
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-    const [usuario, setUsuario] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        // Por ahora, leemos temporalmente un token simulado para la migración.
-        const token = sessionStorage.getItem("token_seguro");
-        if (token) {
-            // Simulamos la decodificación de un JWT seguro
-            setUsuario(JSON.parse(sessionStorage.getItem("datos_usuario")));
+    // Lazy initializer: sessionStorage es síncrono, leemos la sesión activa
+    // directamente en el primer render. Si hay datos guardados, restauramos
+    // el usuario; si no, queda en null (visitante sin sesión).
+    const [usuario, setUsuario] = useState(() => {
+        try {
+            const datos = sessionStorage.getItem("datos_usuario");
+            return datos ? JSON.parse(datos) : null;
+        } catch {
+            return null;
         }
-        setLoading(false);
-    }, []);
+    });
 
     const login = async (correo, password) => {
-        
+
         try {
             // Simulación de llamada a API
             if(correo === "admin@hobic.cl" && password === "adm123") {
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
                 return { success: true };
             }
             return { success: false, message: "Credenciales inválidas" };
-        } catch (error) {
+        } catch {
             return { success: false, message: "Error de conexión" };
         }
     };
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ usuario, login, logout, loading }}>
+        <AuthContext.Provider value={{ usuario, login, logout, loading: false }}>
             {children}
         </AuthContext.Provider>
     );
