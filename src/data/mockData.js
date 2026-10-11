@@ -233,7 +233,7 @@ export function obtenerProductosPorCategoria(categoria){
     return leerInventario().filter((producto) => producto.categoria === categoria);
 }
 
-export function obtenerOferta(){
+export function obtenerOfertas(){
     return leerInventario().filter((producto) => producto.descuento > 0);
 }
 

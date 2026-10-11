@@ -14,7 +14,6 @@ import InicioSesion from './pages/InicioSesion';
 import AdminUsuarios from './pages/AdminUsuarios';
 import Registro from './pages/Registro';
 import Recuperar from './pages/Recuperar';
-import AdminUsuarios from './pages/AdminUsuarios'; 
 import PanelVendedor from './pages/PanelVendedor';
 import Checkout from './pages/Checkout';
 import PagoExitoso from './pages/PagoExitoso';
@@ -40,16 +39,11 @@ function App() {
               <Route path="/inicioSesion" element={<InicioSesion />} />
               <Route path="/categoria/:slug" element={<Categorias />} />
               <Route path="/ofertas" element={<Ofertas />} />
-            {/* Rutas Públicas: Cualquier persona puede verlas */}
-            <Route path="/" element={<Inicio />} />
-            <Route path="/catalogo" element={<Catalogo />} />
-            <Route path="/nosotros" element={<Nosotros />} />
-            <Route path="/contacto" element={<Contacto />} />
-            <Route path="/blogs" element={<Blog />} />
-            <Route path="/carrito" element={<Carrito />} />
-            <Route path="/inicioSesion" element={<InicioSesion />} />
-            <Route path="/registro" element={<Registro />} />
-            <Route path="/recuperar" element={<Recuperar />} />
+              <Route path="/nosotros" element={<Nosotros />} />
+              <Route path="/contacto" element={<Contacto />} />
+              <Route path="/blogs" element={<Blog />} />
+              <Route path="/registro" element={<Registro />} />
+              <Route path="/recuperar" element={<Recuperar />} />
 
               {/* Rutas de compra y producto */}
               <Route path="/pago" element={<Checkout />} />
@@ -71,7 +65,6 @@ function App() {
             </Routes>
           </main>
           <Footer />
-          <Footer/>
           <ChatVivo /> 
         </BrowserRouter>
       </CartProvider>
