@@ -61,6 +61,28 @@ export default function Header() {
                             <Link className="nav-link text-white hover-pink fw-semibold" to="/catalogo">Catálogo</Link>
                         </li>
                         <li className="nav-item">
+                            <Link className="nav-link fw-semibold" to="/ofertas" style={{ color: '#e0006c' }}>
+                                Ofertas
+                            </Link>
+                        </li>
+                        <li className="nav-item dropdown">
+                            <span 
+                                className="nav-link dropdown-toggle text-white fw-semibold" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false"
+                                style={{ cursor: 'pointer' }}
+                            >
+                                Categorías
+                            </span>
+                            <ul className="dropdown-menu dropdown-menu-dark shadow">
+                                <li><Link className="dropdown-item" to="/categoria/libros">📚 Libros</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/mangas">📖 Mangas</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/series">📺 Series</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/videojuegos">🎮 Videojuegos</Link></li>
+                            </ul>
+                        </li>
+                        <li className="nav-item">
                             <Link className="nav-link text-white hover-pink fw-semibold" to="/nosotros">Nosotros</Link>
                         </li>
                         <li className="nav-item">
