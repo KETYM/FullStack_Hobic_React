@@ -89,6 +89,25 @@ export default function Checkout() {
         };
         localStorage.setItem('ultimaBoleta', JSON.stringify(boleta));
 
+        // Registramos el pedido para que el Vendedor lo vea en su panel
+        const nuevoPedido = {
+            id: boleta.numero,
+            cliente: formulario.nombre,
+            telefono: formulario.telefono,
+            direccion: `${formulario.direccion}, ${formulario.comuna}, ${formulario.region}`,
+            total: totalPlata,
+            fecha: new Date().toISOString().split('T')[0],
+            estado: 'Pendiente',
+            productos: carrito.map(p => ({ id: p.id, nombre: p.nombre, cantidad: p.cantidad, precio: p.precio }))
+        };
+
+        try {
+            const pedidosPrevios = JSON.parse(localStorage.getItem('pedidosHobic')) || [];
+            localStorage.setItem('pedidosHobic', JSON.stringify([nuevoPedido, ...pedidosPrevios]));
+        } catch {
+            localStorage.setItem('pedidosHobic', JSON.stringify([nuevoPedido]));
+        }
+
         // El vaciado del carrito lo hará PagoExitoso al montarse (PASO 3).
         navigate('/boleta');
     };

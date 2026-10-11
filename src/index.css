@@ -756,7 +756,6 @@ body[style*="#f8f9fa"] .table tbody img {
 
 /* 5. Botones de acción: Editar e intuitivo botón Borrar */
 body[style*="#f8f9fa"] .btn-primary.btn-sm,
-body[style*="#f8f9fa"] button:contains("Editar"),
 body[style*="#f8f9fa"] .table button:first-child {
     background-color: #6366f1 !important;
     color: #ffffff !important;

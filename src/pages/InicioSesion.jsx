@@ -17,19 +17,27 @@ export default function InicioSesion() {
         });
     };
 
+    const rellenarDemo = (correo, password) => {
+        setCredenciales({ correo, password });
+        setError('');
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setCargando(true);
 
-        // Pasamos los datos al contexto para que gestione la petición al backend
         const resultado = await login(credenciales.correo, credenciales.password);
 
         if (resultado.success) {
-            // Si el token es válido y se inicia sesión, llevamos al usuario a la página principal
-            navigate('/');
+            if (resultado.usuario?.rol === 'admin') {
+                navigate('/admin');
+            } else if (resultado.usuario?.rol === 'vendedor') {
+                navigate('/ventas');
+            } else {
+                navigate('/');
+            }
         } else {
-            // Si falla, mostramos el mensaje de error (ej. "Credenciales inválidas")
             setError(resultado.message);
             setCargando(false);
         }
@@ -37,8 +45,8 @@ export default function InicioSesion() {
 
     return (
         <div className="container mt-5 mb-5 d-flex justify-content-center">
-            <div className="card shadow-lg border-0" style={{ maxWidth: '400px', width: '100%' }}>
-                <div className="card-body p-5">
+            <div className="card shadow-lg border-0" style={{ maxWidth: '440px', width: '100%' }}>
+                <div className="card-body p-4 p-md-5">
                     <div className="text-center mb-4">
                         <h2 className="fw-bold">
                             HOBI<span style={{ color: '#e0006c' }}>C</span>
@@ -46,7 +54,7 @@ export default function InicioSesion() {
                         <p className="text-muted">Inicia sesión en tu cuenta</p>
                     </div>
 
-                    {/* Alerta de Error de Seguridad */}
+                    {/* Alerta de Error */}
                     {error && (
                         <div className="alert alert-danger py-2" role="alert">
                             {error}
@@ -68,8 +76,13 @@ export default function InicioSesion() {
                             />
                         </div>
                         
-                        <div className="mb-4">
-                            <label className="form-label fw-bold">Contraseña</label>
+                        <div className="mb-3">
+                            <div className="d-flex justify-content-between">
+                                <label className="form-label fw-bold">Contraseña</label>
+                                <Link to="/recuperar" className="text-decoration-none small text-muted">
+                                    ¿Olvidaste tu contraseña?
+                                </Link>
+                            </div>
                             <input 
                                 type="password" 
                                 className="form-control" 
@@ -95,9 +108,30 @@ export default function InicioSesion() {
                         </button>
                     </form>
 
+                    {/* Accesos rápidos de prueba (Demo) */}
+                    <div className="p-3 bg-light rounded text-center mb-3 border">
+                        <small className="d-block text-muted mb-2 fw-semibold">Acceso Rápido de Prueba:</small>
+                        <div className="d-flex gap-2 justify-content-center">
+                            <button 
+                                type="button" 
+                                className="btn btn-sm btn-outline-danger" 
+                                onClick={() => rellenarDemo('admin@hobic.cl', 'adm123')}
+                            >
+                                Admin
+                            </button>
+                            <button 
+                                type="button" 
+                                className="btn btn-sm btn-outline-warning text-dark" 
+                                onClick={() => rellenarDemo('vendedor@hobic.cl', 'ven123')}
+                            >
+                                Vendedor
+                            </button>
+                        </div>
+                    </div>
+
                     <div className="text-center mt-3">
                         <small className="text-muted">
-                            ¿No tienes cuenta? <Link to="/registro" className="text-decoration-none" style={{ color: '#e0006c' }}>Regístrate aquí</Link>
+                            ¿No tienes cuenta? <Link to="/registro" className="text-decoration-none fw-bold" style={{ color: '#e0006c' }}>Regístrate aquí</Link>
                         </small>
                     </div>
                 </div>

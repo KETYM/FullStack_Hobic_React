@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../styles/chatVivo.css';
 const ChatVivo = () => {
   // Inicializamos el estado leyendo de localStorage si existe, o con un mensaje de bienvenida
@@ -13,15 +13,15 @@ const ChatVivo = () => {
   const [chatAbierto, setChatAbierto] = useState(false); // Para mostrar/ocultar el chat como widget
   const mensajesFinRef = useRef(null);
 
+  const hacerScrollAbajo = () => {
+    mensajesFinRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   // Efecto para guardar los mensajes en localStorage cada vez que cambian
   useEffect(() => {
     localStorage.setItem('hobic_chat', JSON.stringify(mensajes));
     hacerScrollAbajo();
   }, [mensajes, chatAbierto]);
-
-  const hacerScrollAbajo = () => {
-    mensajesFinRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
 
   const manejarEnvio = (e) => {
     e.preventDefault();
