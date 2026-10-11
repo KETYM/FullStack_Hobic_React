@@ -1,0 +1,12 @@
+/* src/styles/Header.css */
+.hover-pink {
+    transition: color 0.3s ease;
+}
+
+.hover-pink:hover {
+    color: #e0006c !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}

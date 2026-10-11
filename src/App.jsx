@@ -5,12 +5,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Inicio from './pages/Inicio';
 import Catalogo from './pages/Catalogo';
-import Carrito from './pages/Carrito'; // <-- Faltaba importar esta vista
+import Carrito from './pages/Carrito'; 
 import Admin from './pages/Admin';
 import InicioSesion from './pages/InicioSesion';
 import AdminUsuarios from './pages/AdminUsuarios'; 
 import PanelVendedor from './pages/PanelVendedor';
 import Footer from "./components/Footer";
+import ChatVivo from './components/ChatEnVivo';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
           </Routes>
           </main>
           <Footer/>
+          <ChatVivo /> 
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
