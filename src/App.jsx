@@ -5,7 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import Inicio from './pages/Inicio';
 import Catalogo from './pages/Catalogo';
-import Carrito from './pages/Carrito'; // <-- Faltaba importar esta vista
+import Carrito from './pages/Carrito'; 
 import Admin from './pages/Admin';
 import InicioSesion from './pages/InicioSesion';
 import AdminUsuarios from './pages/AdminUsuarios';
@@ -17,6 +17,7 @@ import DetalleProducto from './pages/DetalleProducto';
 import Footer from "./components/Footer";
 import Categorias from './pages/Categorias';
 import Ofertas from './pages/Ofertas';
+import ChatVivo from './components/ChatEnVivo';
 
 function App() {
   return (
@@ -54,6 +55,8 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <Footer/>
+          <ChatVivo /> 
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
