@@ -19,22 +19,20 @@ export const CartProvider = ({children}) => {
         localStorage.setItem('carritoHobic', JSON.stringify(carrito));
     }, [carrito]);
 
-    const agregarAlCarrito = (producto) => {
+    const agregarAlCarrito = (producto, cantidad = 1) => {
         setCarrito(prevCarrito => {
-            // Cambiado a ID por seguridad y precisión
             const productoExistente = prevCarrito.find(item => item.id === producto.id);
 
             if (productoExistente) {
                 return prevCarrito.map(item =>
                     item.id === producto.id
-                        ? { ...item, cantidad: item.cantidad + 1 }
+                        ? { ...item, cantidad: item.cantidad + cantidad }
                         : item
                 );
             }
-            return [...prevCarrito, { ...producto, cantidad: 1 }];
+            return [...prevCarrito, { ...producto, cantidad }];
         });
-        // Nota: Considera cambiar este alert por un Toast en el futuro para mejor UX
-        alert("Añadido al carrito de compra"); 
+        alert("Añadido al carrito de compra");
     };
 
     // Cambiado para recibir ID en lugar de index
@@ -55,6 +53,11 @@ export const CartProvider = ({children}) => {
         setCarrito((prevCarrito) => prevCarrito.filter(item => item.id !== id));
     };
 
+    // Vacía el carrito completo (cuando la compra se concretó)
+    const vaciarCarrito = () => {
+        setCarrito([]);
+    };
+
     const totalArticulos = carrito.reduce((acc, item) => acc + item.cantidad, 0);
     const totalPlata = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
 
@@ -64,6 +67,7 @@ export const CartProvider = ({children}) => {
             agregarAlCarrito, // Corregido el typo aquí
             cambiarCantidad,
             eliminarDelCarrito,
+            vaciarCarrito,
             totalArticulos,
             totalPlata
         }}>

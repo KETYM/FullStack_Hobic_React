@@ -10,6 +10,10 @@ import Admin from './pages/Admin';
 import InicioSesion from './pages/InicioSesion';
 import AdminUsuarios from './pages/AdminUsuarios'; 
 import PanelVendedor from './pages/PanelVendedor';
+import Checkout from './pages/Checkout';
+import PagoExitoso from './pages/PagoExitoso';
+import PagoError from './pages/PagoError';
+import DetalleProducto from './pages/DetalleProducto';
 import Footer from "./components/Footer";
 
 function App() {
@@ -25,6 +29,12 @@ function App() {
             <Route path="/catalogo" element={<Catalogo />} />
             <Route path="/carrito" element={<Carrito />} />
             <Route path="/inicioSesion" element={<InicioSesion />} />
+
+            {/* Rutas de compra y producto */}
+            <Route path="/pago" element={<Checkout />} />
+            <Route path="/boleta" element={<PagoExitoso />} />
+            <Route path="/pago-error" element={<PagoError />} />
+            <Route path="/producto/:id" element={<DetalleProducto />} />
 
             {/* Rutas Protegidas COMPARTIDAS: Pueden entrar Admins Y Vendedores */}
             <Route element={<ProtectedRoute allowedRoles={['admin', 'vendedor']} />}>
