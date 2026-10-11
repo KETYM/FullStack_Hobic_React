@@ -21,7 +21,9 @@ export default function DetalleProducto() {
     }
 
     // Alerta de stock bajo (<= stockCritico)
-    const stockBajo = producto.stock <= producto.stockCritico;
+    const stock = producto.stock ?? 10;
+    const stockCritico = producto.stockCritico ?? 5;
+    const stockBajo = stock <= stockCritico;
 
     const handleAgregar = () => {
         agregarAlCarrito(producto, cantidad);
@@ -54,31 +56,38 @@ export default function DetalleProducto() {
 
                     <hr className="my-5 border-secondary" />
 
-                    {/* Características: se renderizan desde detalles.attr1..4 */}
-                    <h3 className="fs-4 mb-4">Características del producto</h3>
-                    <div className="row g-4 mb-4">
-                        {Object.values(producto.detalles).map((detalle) => (
-                            <div key={detalle.etiqueta} className="col-md-6 d-flex align-items-center gap-3">
-                                <div
-                                    className="p-3 rounded-circle d-flex align-items-center justify-content-center"
-                                    style={{ width: '50px', height: '50px', backgroundColor: 'var(--bg-surface-elevated)' }}
-                                >
-                                    <span className="fw-bold fs-5" style={{ color: 'var(--text-muted)' }}>•</span>
-                                </div>
-                                <div>
-                                    <span className="d-block text-muted" style={{ fontSize: '14px' }}>{detalle.etiqueta}</span>
-                                    <span className="fw-bold">{detalle.valor}</span>
-                                </div>
+                    {/* Características: se renderizan desde detalles de forma segura */}
+                    {producto.detalles && Object.keys(producto.detalles).length > 0 && (
+                        <>
+                            <h3 className="fs-4 mb-4">Características del producto</h3>
+                            <div className="row g-4 mb-4">
+                                {Object.entries(producto.detalles).map(([clave, detalle]) => {
+                                    const etiqueta = (typeof detalle === 'object' && detalle !== null) ? detalle.etiqueta : clave;
+                                    const valor = (typeof detalle === 'object' && detalle !== null) ? detalle.valor : detalle;
+                                    return (
+                                        <div key={etiqueta || clave} className="col-md-6 d-flex align-items-center gap-3">
+                                            <div
+                                                className="p-3 rounded-circle d-flex align-items-center justify-content-center"
+                                                style={{ width: '50px', height: '50px', backgroundColor: 'var(--bg-surface-elevated, #f8f9fa)' }}
+                                            >
+                                                <span className="fw-bold fs-5" style={{ color: 'var(--text-muted, #6c757d)' }}>•</span>
+                                            </div>
+                                            <div>
+                                                <span className="d-block text-muted" style={{ fontSize: '14px' }}>{etiqueta}</span>
+                                                <span className="fw-bold">{valor}</span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                        ))}
-                    </div>
-
-                    <hr className="my-5 border-secondary" />
+                            <hr className="my-5 border-secondary" />
+                        </>
+                    )}
 
                     {/* Descripción */}
                     <h3 className="fs-4 mb-3">Descripción</h3>
                     <p style={{ color: 'var(--text-muted)', lineHeight: '1.7', fontSize: '16px' }}>
-                        {producto.descripcion}
+                        {producto.descripcion || 'Sin descripción disponible para este producto.'}
                     </p>
                 </div>
 
@@ -88,14 +97,14 @@ export default function DetalleProducto() {
                         className="rounded p-4 shadow-sm position-sticky"
                         style={{ top: '20px', backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border-subtle)' }}
                     >
-                        <p className="text-muted small mb-2">{producto.categoria.toUpperCase()} | Hobic</p>
+                        <p className="text-muted small mb-2">{(producto.categoria || 'PRODUCTO').toUpperCase()} | Hobic</p>
                         <h1 className="fs-4 fw-bold mb-3">{producto.nombre}</h1>
 
                         {/* Precio con descuento */}
                         {producto.descuento > 0 && (
                             <div className="d-flex align-items-center gap-2 mb-3">
                                 <span className="text-decoration-line-through text-muted" style={{ fontSize: '15px' }}>
-                                    ${producto.precioAnterior.toLocaleString('es-CL')}
+                                    ${(producto.precioAnterior || Math.round(producto.precio * 1.2)).toLocaleString('es-CL')}
                                 </span>
                                 <span className="badge" style={{ backgroundColor: '#e0006c' }}>
                                     -{producto.descuento}%
@@ -115,7 +124,7 @@ export default function DetalleProducto() {
                         {/* Stock y Cantidad */}
                         {stockBajo ? (
                             <p className="fw-bold mb-2" style={{ color: '#e0006c' }}>
-                                ¡Últimas unidades! Solo quedan {producto.stock}
+                                ¡Últimas unidades! Solo quedan {stock}
                             </p>
                         ) : (
                             <p className="text-success fw-bold mb-2">¡Stock disponible!</p>
@@ -127,13 +136,13 @@ export default function DetalleProducto() {
                                 value={cantidad}
                                 onChange={(e) => setCantidad(Number(e.target.value))}
                             >
-                                {Array.from({ length: producto.stock }, (_, i) => i + 1).map((num) => (
+                                {Array.from({ length: stock > 0 ? stock : 1 }, (_, i) => i + 1).map((num) => (
                                     <option key={num} value={num}>
                                         {num} unidad{num > 1 ? 'es' : ''}
                                     </option>
                                 ))}
                             </select>
-                            <span className="text-muted small">({producto.stock} disponibles)</span>
+                            <span className="text-muted small">({stock} disponibles)</span>
                         </div>
 
                         {/* Botones de Acción */}

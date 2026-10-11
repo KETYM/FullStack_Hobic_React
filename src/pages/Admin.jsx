@@ -1,12 +1,11 @@
 import { useState } from 'react';
-// import { useAuth } from '../context/AuthContext'; // Descomenta esto para registrar qué admin hace los cambios
+import { obtenerProductos } from '../data/mockData';
 
 export default function Admin() {
-    // Lazy initializer: lee localStorage solo en el primer render.
-    // localStorage es síncrono, no hace falta un useEffect para la carga inicial.
+    // Lazy initializer: lee localStorage o carga productos base
     const [inventario, setInventario] = useState(() => {
         try {
-            return JSON.parse(localStorage.getItem("inventarioHobic")) || [];
+            return obtenerProductos();
         } catch {
             return [];
         }
@@ -14,16 +13,27 @@ export default function Admin() {
     const [loading, setLoading] = useState(false);
     const [alerta, setAlerta] = useState({ tipo: '', mensaje: '' });
 
-    const estadoInicialForm = { id: '', nombre: '', precio: '', imagen: '', categoria: '', descuento: '' };
+    const estadoInicialForm = {
+        id: '',
+        nombre: '',
+        precio: '',
+        imagen: '',
+        categoria: '',
+        descuento: 0,
+        stock: 10,
+        stockCritico: 5,
+        descripcion: ''
+    };
     const [formData, setFormData] = useState(estadoInicialForm);
     const [modoEdicion, setModoEdicion] = useState(false);
 
     // 2. Manejo seguro de inputs (Previene tipos de datos incorrectos)
     const handleChange = (e) => {
         const { name, value } = e.target;
+        const camposNumericos = ['precio', 'descuento', 'stock', 'stockCritico'];
         setFormData({
             ...formData,
-            [name]: (name === 'precio' || name === 'descuento') ? Number(value) : value
+            [name]: camposNumericos.includes(name) ? Number(value) : value
         });
     };
 
@@ -59,18 +69,22 @@ export default function Admin() {
         setLoading(true);
         try {
             if (modoEdicion) {
-                // 🔗 CIBERSEGURIDAD: Aquí irá tu llamada PUT a Spring Boot
-                const inventarioActualizado = inventario.map(prod => prod.id === formData.id ? formData : prod);
+                // Preservar id y detalles existentes si los hay
+                const inventarioActualizado = inventario.map(prod => 
+                    prod.id === formData.id ? { ...prod, ...formData } : prod
+                );
                 setInventario(inventarioActualizado);
-                localStorage.setItem("inventarioHobic", JSON.stringify(inventarioActualizado)); // Temporal
+                localStorage.setItem("inventarioHobic", JSON.stringify(inventarioActualizado));
                 mostrarAlerta('success', 'Producto actualizado correctamente');
             } else {
-                // 🔗 CIBERSEGURIDAD: Aquí irá tu llamada POST a Spring Boot
-                // El backend debe ser quien asigne el ID seguro (UUID), no el frontend con Date.now()
-                const nuevoProducto = { ...formData, id: crypto.randomUUID() };
+                const nuevoProducto = { 
+                    ...formData, 
+                    id: crypto.randomUUID(),
+                    detalles: formData.detalles || {} 
+                };
                 const nuevoInventario = [...inventario, nuevoProducto];
                 setInventario(nuevoInventario);
-                localStorage.setItem("inventarioHobic", JSON.stringify(nuevoInventario)); // Temporal
+                localStorage.setItem("inventarioHobic", JSON.stringify(nuevoInventario));
                 mostrarAlerta('success', 'Producto agregado correctamente');
             }
             setFormData(estadoInicialForm);
@@ -83,7 +97,18 @@ export default function Admin() {
     };
 
     const editarProducto = (producto) => {
-        setFormData(producto);
+        setFormData({
+            id: producto.id || '',
+            nombre: producto.nombre || '',
+            precio: producto.precio || 0,
+            imagen: producto.imagen || '',
+            categoria: producto.categoria || '',
+            descuento: producto.descuento || 0,
+            stock: producto.stock ?? 10,
+            stockCritico: producto.stockCritico ?? 5,
+            descripcion: producto.descripcion || '',
+            detalles: producto.detalles || {}
+        });
         setModoEdicion(true);
         window.scrollTo(0, 0); // Mejora de UX: llevar al admin al formulario
     };
@@ -127,7 +152,6 @@ export default function Admin() {
                     <div className="card shadow-sm p-4">
                         <h4>{modoEdicion ? 'Editar Producto' : 'Nuevo Producto'}</h4>
                         <form onSubmit={handleSubmit}>
-                            {/* ... (Tus inputs HTML se mantienen exactamente iguales aquí) ... */}
                             <div className="mb-3">
                                 <label className="form-label">Nombre</label>
                                 <input type="text" className="form-control" name="nombre" value={formData.nombre} onChange={handleChange} required />
@@ -140,11 +164,21 @@ export default function Admin() {
                                 <label className="form-label">Categoría</label>
                                 <select className="form-select" name="categoria" value={formData.categoria} onChange={handleChange} required>
                                     <option value="">Seleccione...</option>
-                                    <option value="manga">Manga</option>
-                                    <option value="juegos">Juegos</option>
-                                    <option value="figuras">Figuras</option>
-                                    <option value="accesorios">Accesorios</option>
+                                    <option value="libros">Libros</option>
+                                    <option value="mangas">Mangas</option>
+                                    <option value="series">Series</option>
+                                    <option value="videojuegos">Videojuegos</option>
                                 </select>
+                            </div>
+                            <div className="row">
+                                <div className="col-6 mb-3">
+                                    <label className="form-label">Stock</label>
+                                    <input type="number" className="form-control" name="stock" value={formData.stock} onChange={handleChange} min="0" required />
+                                </div>
+                                <div className="col-6 mb-3">
+                                    <label className="form-label">Stock Crítico</label>
+                                    <input type="number" className="form-control" name="stockCritico" value={formData.stockCritico} onChange={handleChange} min="0" />
+                                </div>
                             </div>
                             <div className="mb-3">
                                 <label className="form-label">URL de Imagen</label>
@@ -153,6 +187,10 @@ export default function Admin() {
                             <div className="mb-3">
                                 <label className="form-label">Descuento (%) (Opcional)</label>
                                 <input type="number" className="form-control" name="descuento" value={formData.descuento} onChange={handleChange} />
+                            </div>
+                            <div className="mb-3">
+                                <label className="form-label">Descripción (Opcional)</label>
+                                <textarea className="form-control" name="descripcion" value={formData.descripcion} onChange={handleChange} rows="2" />
                             </div>
                             <div className="d-grid gap-2">
                                 <button type="submit" className={`btn ${modoEdicion ? 'btn-warning' : 'btn-success'}`} disabled={loading}>

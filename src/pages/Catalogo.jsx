@@ -1,20 +1,20 @@
 import { useState, useEffect } from 'react';
-import { useCart } from '../context/CartContext';
+import { useSearchParams } from 'react-router-dom';
+import { obtenerProductos } from '../data/mockData';
+import ProductCard from '../components/ProductCard';
 
 export default function Catalogo() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const filtro = searchParams.get('categoria') || 'todos';
+
     const [productos, setProductos] = useState([]);
-    const [filtro, setFiltro] = useState('todos');
-    
-    // Importamos la función de nuestro contexto corregido
-    const { agregarAlCarrito } = useCart();
+    const [busqueda, setBusqueda] = useState(() => searchParams.get('buscar') || '');
 
     useEffect(() => {
-        // En el futuro, esto será un fetch a tu API de Spring Boot.
-        // Por ahora, lee el mismo inventario que crea el Admin.
         const cargarProductos = () => {
             try {
-                const inventarioGuardado = JSON.parse(localStorage.getItem("inventarioHobic")) || [];
-                setProductos(inventarioGuardado);
+                const lista = obtenerProductos();
+                setProductos(lista || []);
             } catch (error) {
                 console.error("Error al cargar el inventario", error);
                 setProductos([]);
@@ -23,97 +23,104 @@ export default function Catalogo() {
         cargarProductos();
     }, []);
 
-    // Lógica para filtrar los productos según el botón seleccionado
-    const productosFiltrados = filtro === 'todos' 
-        ? productos 
-        : productos.filter(prod => prod.categoria === filtro);
+    const cambiarFiltro = (nuevaCategoria) => {
+        const params = new URLSearchParams(searchParams);
+        if (nuevaCategoria === 'todos') {
+            params.delete('categoria');
+        } else {
+            params.set('categoria', nuevaCategoria);
+        }
+        setSearchParams(params);
+    };
+
+    // Lógica para filtrar los productos según categoría y texto de búsqueda
+    const productosFiltrados = productos.filter((prod) => {
+        const coincideCategoria = filtro === 'todos' || prod.categoria.toLowerCase() === filtro.toLowerCase();
+        const coincideBusqueda = busqueda.trim() === '' || 
+            prod.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
+            prod.categoria.toLowerCase().includes(busqueda.toLowerCase());
+        return coincideCategoria && coincideBusqueda;
+    });
 
     return (
         <div className="container mt-5 mb-5">
             <h2 className="text-center mb-4 fw-bold">Catálogo Hobic</h2>
 
-            {/* Botones de Filtro */}
+            {/* Buscador */}
+            <div className="row justify-content-center mb-4">
+                <div className="col-md-6 col-lg-5">
+                    <div className="input-group">
+                        <span className="input-group-text bg-white border-end-0">🔍</span>
+                        <input
+                            type="text"
+                            className="form-control border-start-0 shadow-none"
+                            placeholder="Buscar por título o categoría..."
+                            value={busqueda}
+                            onChange={(e) => setBusqueda(e.target.value)}
+                        />
+                        {busqueda && (
+                            <button 
+                                className="btn btn-outline-secondary" 
+                                type="button" 
+                                onClick={() => setBusqueda('')}
+                            >
+                                ✖
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Botones de Filtro por Categorías Reales */}
             <div className="d-flex justify-content-center mb-5 gap-2 flex-wrap">
                 <button 
                     className={`btn ${filtro === 'todos' ? 'btn-primary' : 'btn-outline-primary'}`} 
-                    onClick={() => setFiltro('todos')}
+                    onClick={() => cambiarFiltro('todos')}
                 >
                     Todos
                 </button>
                 <button 
-                    className={`btn ${filtro === 'manga' ? 'btn-primary' : 'btn-outline-primary'}`} 
-                    onClick={() => setFiltro('manga')}
+                    className={`btn ${filtro === 'mangas' ? 'btn-primary' : 'btn-outline-primary'}`} 
+                    onClick={() => cambiarFiltro('mangas')}
                 >
                     Mangas
                 </button>
                 <button 
-                    className={`btn ${filtro === 'juegos' ? 'btn-primary' : 'btn-outline-primary'}`} 
-                    onClick={() => setFiltro('juegos')}
+                    className={`btn ${filtro === 'videojuegos' ? 'btn-primary' : 'btn-outline-primary'}`} 
+                    onClick={() => cambiarFiltro('videojuegos')}
                 >
-                    Juegos
+                    Videojuegos
                 </button>
                 <button 
-                    className={`btn ${filtro === 'figuras' ? 'btn-primary' : 'btn-outline-primary'}`} 
-                    onClick={() => setFiltro('figuras')}
+                    className={`btn ${filtro === 'series' ? 'btn-primary' : 'btn-outline-primary'}`} 
+                    onClick={() => cambiarFiltro('series')}
                 >
-                    Figuras
+                    Series
                 </button>
                 <button 
-                    className={`btn ${filtro === 'accesorios' ? 'btn-primary' : 'btn-outline-primary'}`} 
-                    onClick={() => setFiltro('accesorios')}
+                    className={`btn ${filtro === 'libros' ? 'btn-primary' : 'btn-outline-primary'}`} 
+                    onClick={() => cambiarFiltro('libros')}
                 >
-                    Accesorios
+                    Libros
                 </button>
             </div>
 
             {/* Grilla de Productos */}
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                 {productosFiltrados.length === 0 ? (
-                    <div className="col-12 text-center mt-5">
-                        <h4 className="text-muted">No hay productos disponibles en esta categoría.</h4>
-                        <p>Prueba agregando algunos desde el panel de Administración.</p>
+                    <div className="col-12 text-center mt-5 py-5">
+                        <h4 className="text-muted fw-bold">No se encontraron productos</h4>
+                        <p className="text-muted">Prueba con otra categoría o término de búsqueda.</p>
+                        {filtro !== 'todos' && (
+                            <button className="btn btn-sm btn-outline-primary mt-2" onClick={() => cambiarFiltro('todos')}>
+                                Ver todos los productos
+                            </button>
+                        )}
                     </div>
                 ) : (
                     productosFiltrados.map((producto) => (
                         <div className="col" key={producto.id}>
-                            <div className="card h-100 shadow-sm border-0 position-relative">
-                                {/* Etiqueta de Descuento Visual */}
-                                {producto.descuento > 0 && (
-                                    <div className="position-absolute top-0 end-0 bg-danger text-white px-2 py-1 m-2 rounded fw-bold z-1">
-                                        -{producto.descuento}%
-                                    </div>
-                                )}
-                                
-                                <img 
-                                    src={producto.imagen} 
-                                    className="card-img-top p-3" 
-                                    alt={producto.nombre} 
-                                    style={{ height: '250px', objectFit: 'contain' }}
-                                    loading="lazy"
-                                />
-                                
-                                <div className="card-body d-flex flex-column bg-light">
-                                    <span className="badge bg-secondary mb-2 align-self-start">
-                                        {producto.categoria.toUpperCase()}
-                                    </span>
-                                    <h5 className="card-title text-truncate" title={producto.nombre}>
-                                        {producto.nombre}
-                                    </h5>
-                                    
-                                    <div className="mt-auto pt-3">
-                                        <p className="fs-5 fw-bold mb-3 text-dark">
-                                            ${producto.precio.toLocaleString('es-CL')}
-                                        </p>
-                                        <button 
-                                            className="btn btn-dark w-100 fw-bold transition-all"
-                                            onClick={() => agregarAlCarrito(producto)}
-                                        >
-                                            <i className="bi bi-cart-plus me-2"></i> 
-                                            Agregar al Carrito
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            <ProductCard producto={producto} />
                         </div>
                     ))
                 )}
