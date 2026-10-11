@@ -135,8 +135,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const usuarios = obtenerUsuariosGuardados();
             const index = usuarios.findIndex(
-                (u) => u.correo.toLowerCase() === correo.trim().toLowerCase() && 
-                       (u.run || '').trim().toUpperCase() === run.trim().toUpperCase()
+                (u) => u.correo.toLowerCase() === correo.trim().toLowerCase() &&
+                    (u.run || '').trim().toUpperCase() === run.trim().toUpperCase()
             );
 
             if (index === -1) {
@@ -159,13 +159,13 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ 
-            usuario, 
-            login, 
-            logout, 
-            register, 
-            recuperarPassword, 
-            loading: false 
+        <AuthContext.Provider value={{
+            usuario,
+            login,
+            logout,
+            register,
+            recuperarPassword,
+            loading: false
         }}>
             {children}
         </AuthContext.Provider>

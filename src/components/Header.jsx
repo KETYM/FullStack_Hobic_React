@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCart } from '../context/CartContext'; 
+import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import '../styles/Header.css'; 
+import '../styles/Header.css';
 
 export default function Header() {
     const { totalArticulos } = useCart();
@@ -39,13 +39,13 @@ export default function Header() {
                 </Link>
 
                 {/* Botón hamburguesa para móviles */}
-                <button 
-                    className="navbar-toggler navbar-dark border-0" 
-                    type="button" 
-                    data-bs-toggle="collapse" 
-                    data-bs-target="#navbarHobic" 
-                    aria-controls="navbarHobic" 
-                    aria-expanded="false" 
+                <button
+                    className="navbar-toggler navbar-dark border-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarHobic"
+                    aria-controls="navbarHobic"
+                    aria-expanded="false"
                     aria-label="Alternar navegación"
                 >
                     <span className="navbar-toggler-icon"></span>
@@ -66,10 +66,10 @@ export default function Header() {
                             </Link>
                         </li>
                         <li className="nav-item dropdown">
-                            <span 
-                                className="nav-link dropdown-toggle text-white fw-semibold" 
-                                role="button" 
-                                data-bs-toggle="dropdown" 
+                            <span
+                                className="nav-link dropdown-toggle text-white fw-semibold"
+                                role="button"
+                                data-bs-toggle="dropdown"
                                 aria-expanded="false"
                                 style={{ cursor: 'pointer' }}
                             >
@@ -91,7 +91,7 @@ export default function Header() {
                         <li className="nav-item">
                             <Link className="nav-link text-white hover-pink fw-semibold" to="/contacto">Contacto</Link>
                         </li>
-                        
+
                         {/* 🔒 Control de Acceso para Staff (Admin y Vendedor) */}
                         {esStaff && (
                             <li className="nav-item dropdown ms-xl-2">
@@ -121,10 +121,10 @@ export default function Header() {
                     {/* Barra de Búsqueda Global */}
                     <form onSubmit={handleBuscar} className="d-flex my-2 my-xl-0 mx-xl-3" role="search" style={{ maxWidth: '320px', width: '100%' }}>
                         <div className="input-group">
-                            <input 
-                                className="form-control form-control-sm bg-dark text-white border-secondary shadow-none" 
-                                type="search" 
-                                placeholder="Buscar en Hobic..." 
+                            <input
+                                className="form-control form-control-sm bg-dark text-white border-secondary shadow-none"
+                                type="search"
+                                placeholder="Buscar en Hobic..."
                                 aria-label="Buscar"
                                 value={terminoBusqueda}
                                 onChange={(e) => setTerminoBusqueda(e.target.value)}
@@ -153,7 +153,7 @@ export default function Header() {
                                 Ingresar
                             </Link>
                         )}
-                        
+
                         {/* Botón de Carrito con Contador */}
                         <Link to="/carrito" className="btn btn-warning position-relative px-3" title="Ver carrito">
                             🛒
