@@ -1,8 +1,9 @@
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Carrito() {
     const { carrito, cambiarCantidad, eliminarDelCarrito, totalArticulos, totalPlata } = useCart();
+    const navigate = useNavigate();
 
     if (carrito.length === 0) {
         return (
@@ -71,7 +72,8 @@ export default function Carrito() {
                             <strong>Total a Pagar</strong>
                             <strong>${totalPlata.toLocaleString('es-CL')}</strong>
                         </div>
-                        <button className="btn btn-success w-100 fw-bold">
+                        <button className="btn btn-success w-100 fw-bold"
+                            onClick={() => navigate('/pago')}>
                             Proceder al Pago
                         </button>
                     </div>
