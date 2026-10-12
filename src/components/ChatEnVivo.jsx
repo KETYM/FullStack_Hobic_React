@@ -8,7 +8,7 @@ const ChatVivo = () => {
       { id: 1, texto: '¡Bienvenido a la comunidad de Hobic! ¿Qué estás leyendo o jugando hoy?', remitente: 'sistema' }
     ];
   });
-  
+
   const [nuevoMensaje, setNuevoMensaje] = useState('');
   const [chatAbierto, setChatAbierto] = useState(false); // Para mostrar/ocultar el chat como widget
   const mensajesFinRef = useRef(null);
@@ -40,8 +40,8 @@ const ChatVivo = () => {
   return (
     <div className="chat-container">
       {/* Botón flotante para abrir/cerrar */}
-      <button 
-        className="chat-toggle-btn" 
+      <button
+        className="chat-toggle-btn"
         onClick={() => setChatAbierto(!chatAbierto)}
       >
         {chatAbierto ? '✖ Cerrar Chat' : '💬 Chat en Vivo'}
@@ -53,11 +53,11 @@ const ChatVivo = () => {
           <div className="chat-header">
             <h3>Comunidad Hobic</h3>
           </div>
-          
+
           <div className="chat-messages">
             {mensajes.map((msj) => (
-              <div 
-                key={msj.id} 
+              <div
+                key={msj.id}
                 className={`mensaje-burbuja ${msj.remitente === 'usuario' ? 'mensaje-propio' : 'mensaje-sistema'}`}
               >
                 {msj.texto}
