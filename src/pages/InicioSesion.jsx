@@ -17,11 +17,6 @@ export default function InicioSesion() {
         });
     };
 
-    const rellenarDemo = (correo, password) => {
-        setCredenciales({ correo, password });
-        setError('');
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -71,6 +66,7 @@ export default function InicioSesion() {
                                 placeholder="tu@correo.com"
                                 value={credenciales.correo} 
                                 onChange={handleChange} 
+                                autoComplete="off"
                                 required 
                                 disabled={cargando}
                             />
@@ -90,6 +86,7 @@ export default function InicioSesion() {
                                 placeholder="••••••••"
                                 value={credenciales.password} 
                                 onChange={handleChange} 
+                                autoComplete="new-password"
                                 required 
                                 disabled={cargando}
                             />
@@ -107,27 +104,6 @@ export default function InicioSesion() {
                             )}
                         </button>
                     </form>
-
-                    {/* Accesos rápidos de prueba (Demo) */}
-                    <div className="p-3 bg-light rounded text-center mb-3 border">
-                        <small className="d-block text-muted mb-2 fw-semibold">Acceso Rápido de Prueba:</small>
-                        <div className="d-flex gap-2 justify-content-center">
-                            <button 
-                                type="button" 
-                                className="btn btn-sm btn-outline-danger" 
-                                onClick={() => rellenarDemo('admin@hobic.cl', 'adm123')}
-                            >
-                                Admin
-                            </button>
-                            <button 
-                                type="button" 
-                                className="btn btn-sm btn-outline-warning text-dark" 
-                                onClick={() => rellenarDemo('vendedor@hobic.cl', 'ven123')}
-                            >
-                                Vendedor
-                            </button>
-                        </div>
-                    </div>
 
                     <div className="text-center mt-3">
                         <small className="text-muted">
