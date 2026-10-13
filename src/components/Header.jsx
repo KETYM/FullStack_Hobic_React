@@ -76,10 +76,10 @@ export default function Header() {
                                 Categorías
                             </span>
                             <ul className="dropdown-menu dropdown-menu-dark shadow">
-                                <li><Link className="dropdown-item" to="/categoria/libros">📚 Libros</Link></li>
-                                <li><Link className="dropdown-item" to="/categoria/mangas">📖 Mangas</Link></li>
-                                <li><Link className="dropdown-item" to="/categoria/series">📺 Series</Link></li>
-                                <li><Link className="dropdown-item" to="/categoria/videojuegos">🎮 Videojuegos</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/libros">Libros</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/mangas">Mangas</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/series">Series</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/videojuegos">Videojuegos</Link></li>
                             </ul>
                         </li>
                         <li className="nav-item">
@@ -155,8 +155,12 @@ export default function Header() {
                         )}
 
                         {/* Botón de Carrito con Contador */}
-                        <Link to="/carrito" className="btn btn-warning position-relative px-3" title="Ver carrito">
-                            🛒
+                        <Link to="/carrito" className="btn btn-warning position-relative px-3 d-flex align-items-center" title="Ver carrito">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <circle cx="8" cy="21" r="1" />
+                                <circle cx="19" cy="21" r="1" />
+                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                            </svg>
                             {totalArticulos > 0 && (
                                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                                     {totalArticulos}

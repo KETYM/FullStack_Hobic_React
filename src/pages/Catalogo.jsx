@@ -49,11 +49,13 @@ export default function Catalogo() {
             {/* Buscador */}
             <div className="row justify-content-center mb-4">
                 <div className="col-md-6 col-lg-5">
-                    <div className="input-group">
-                        <span className="input-group-text bg-white border-end-0">🔍</span>
+                    <div className="input-group catalogo-search-group">
+                        <span className="input-group-text">
+                            🔍
+                        </span>
                         <input
                             type="text"
-                            className="form-control border-start-0 shadow-none"
+                            className="form-control"
                             placeholder="Buscar por título o categoría..."
                             value={busqueda}
                             onChange={(e) => setBusqueda(e.target.value)}

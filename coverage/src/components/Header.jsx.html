@@ -524,21 +524,21 @@ export default function <span class="fstat-no" title="function not covered" >Hea
                     &lt;/ul&gt;
 &nbsp;
                     {/* Barra de Búsqueda Global */}
-                    &lt;form onSubmit={handleBuscar} className="d-flex my-2 my-xl-0 mx-xl-3" role="search" style={{ maxWidth: '320px', width: '100%' }}&gt;
-                        &lt;div className="input-group"&gt;
-                            &lt;input 
-                                className="form-control form-control-sm bg-dark text-white border-secondary shadow-none" 
-                                type="search" 
-                                placeholder="Buscar en Hobic..." 
+                    <form onSubmit={handleBuscar} className="d-flex my-2 my-xl-0 mx-xl-3" role="search" style={{ maxWidth: '320px', width: '100%' }}>
+                        <div className="input-group search-header-group">
+                            <input
+                                className="form-control form-control-sm text-white shadow-none search-header-input"
+                                type="search"
+                                placeholder="Buscar en Hobic..."
                                 aria-label="Buscar"
                                 value={terminoBusqueda}
-<span class="fstat-no" title="function not covered" >                                onChange={(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >setTerminoBusqueda(e.target.value)}</span>
-                            /&gt;
-                            &lt;button className="btn btn-sm btn-outline-light" type="submit"&gt;
+                                onChange={(e) => setTerminoBusqueda(e.target.value)}
+                            />
+                            <button className="btn btn-sm btn-primary search-header-btn" type="submit" aria-label="Buscar">
                                 🔍
-                            &lt;/button&gt;
-                        &lt;/div&gt;
-                    &lt;/form&gt;
+                            </button>
+                        </div>
+                    </form>
 &nbsp;
                     {/* Controles de Sesión y Carrito */}
                     &lt;div className="d-flex align-items-center gap-3 mt-3 mt-xl-0"&gt;

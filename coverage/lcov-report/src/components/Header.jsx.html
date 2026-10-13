@@ -524,21 +524,22 @@ export default function <span class="fstat-no" title="function not covered" >Hea
                     &lt;/ul&gt;
 &nbsp;
                     {/* Barra de Búsqueda Global */}
-                    &lt;form onSubmit={handleBuscar} className="d-flex my-2 my-xl-0 mx-xl-3" role="search" style={{ maxWidth: '320px', width: '100%' }}&gt;
-                        &lt;div className="input-group"&gt;
-                            &lt;input 
-                                className="form-control form-control-sm bg-dark text-white border-secondary shadow-none" 
-                                type="search" 
-                                placeholder="Buscar en Hobic..." 
-                                aria-label="Buscar"
-                                value={terminoBusqueda}
-<span class="fstat-no" title="function not covered" >                                onChange={(e</span>) =&gt; <span class="cstat-no" title="statement not covered" >setTerminoBusqueda(e.target.value)}</span>
-                            /&gt;
-                            &lt;button className="btn btn-sm btn-outline-light" type="submit"&gt;
-                                🔍
-                            &lt;/button&gt;
-                        &lt;/div&gt;
-                    &lt;/form&gt;
+                    <form onSubmit={handleBuscar} className="d-flex" role="search">
+                        <div className="input-group">
+                            <input
+                            type="search"
+                            className="form-control bg-dark text-white border-secondary shadow-none"
+                            placeholder="Buscar en Hobic..."
+                            value={busqueda}
+                            onChange={(e) => setBusqueda(e.target.value)}
+                            style={{ fontSize: '0.9rem' }}/>
+
+                            <button
+                            className="btn btn-primary d-flex align-items-center justify-content-center px-3"
+                            type="submit"
+                            aria-label="Buscar">🔍</button>
+                        </div>
+                    </form>
 &nbsp;
                     {/* Controles de Sesión y Carrito */}
                     &lt;div className="d-flex align-items-center gap-3 mt-3 mt-xl-0"&gt;

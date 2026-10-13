@@ -10,3 +10,91 @@
 .navbar-toggler:focus {
     box-shadow: none;
 }
+
+/* Corrección de la barra de búsqueda en el Navbar */
+.navbar form[role="search"] .input-group {
+    align-items: stretch;
+}
+
+.navbar form[role="search"] .input-group input {
+    margin: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 6px !important;
+    border-bottom-left-radius: 6px !important;
+    height: 38px !important;
+}
+
+.navbar form[role="search"] .input-group button {
+    margin: 0 !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+    height: 38px !important;
+    padding: 0 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+}
+
+/* Corrección de la barra de búsqueda en Catálogo */
+.catalogo-search-group {
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+.catalogo-search-group .input-group-text {
+    background-color: #1e293b !important;
+    border: 1.5px solid #475569 !important;
+    border-right: none !important;
+    border-top-left-radius: 6px !important;
+    border-bottom-left-radius: 6px !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+    margin: 0 !important;
+    height: 42px !important;
+    color: #ffffff !important;
+}
+
+.catalogo-search-group .form-control {
+    background-color: #131b2e !important;
+    border: 1.5px solid #475569 !important;
+    border-left: none !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+    margin: 0 !important;
+    height: 42px !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.catalogo-search-group .form-control:focus {
+    background-color: #1a243d !important;
+    border-color: #6366f1 !important;
+}
+
+.catalogo-search-group:has(button) .form-control {
+    border-right: none !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.catalogo-search-group button {
+    border: 1.5px solid #475569 !important;
+    border-left: none !important;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-top-right-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+    margin: 0 !important;
+    height: 42px !important;
+    padding: 0 14px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: none !important;
+}

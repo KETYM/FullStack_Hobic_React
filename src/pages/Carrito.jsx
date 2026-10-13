@@ -33,20 +33,38 @@ export default function Carrito() {
                                             className="me-3 border rounded"
                                         />
                                         <div>
-                                            <h6 className="my-0">{producto.nombre}</h6>
+                                            <h6 className="my-0 fw-bold text-dark">{producto.nombre}</h6>
                                             <small className="text-muted">Categoría: {producto.categoria}</small>
                                         </div>
                                     </div>
                                     <div className="d-flex align-items-center gap-3">
-                                        {/* Controles de cantidad */}
+                                        {/* Controles de cantidad: "-" elimina el producto si cantidad es 1 */}
                                         <div className="btn-group btn-group-sm">
-                                            <button className="btn btn-outline-secondary" onClick={() => cambiarCantidad(producto.id, -1)}>-</button>
+                                            <button 
+                                                className="btn btn-outline-secondary" 
+                                                onClick={() => {
+                                                    if (producto.cantidad === 1) {
+                                                        eliminarDelCarrito(producto.id);
+                                                    } else {
+                                                        cambiarCantidad(producto.id, -1);
+                                                    }
+                                                }}
+                                            >-</button>
                                             <span className="btn btn-light disabled text-dark">{producto.cantidad}</span>
                                             <button className="btn btn-outline-secondary" onClick={() => cambiarCantidad(producto.id, 1)}>+</button>
                                         </div>
                                         <span className="fw-bold">${(producto.precio * producto.cantidad).toLocaleString('es-CL')}</span>
-                                        <button className="btn btn-sm btn-danger" onClick={() => eliminarDelCarrito(producto.id)}>
-                                            🗑️
+                                        <button
+                                            className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center"
+                                            style={{ width: '32px', height: '32px', borderRadius: '6px' }}
+                                            onClick={() => eliminarDelCarrito(producto.id)}
+                                            aria-label="Eliminar producto"
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M3 6h18" />
+                                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+                                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                            </svg>
                                         </button>
                                     </div>
                                 </li>
