@@ -2,12 +2,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { obtenerProductoPorId } from '../data/mockData';
 
 export default function DetalleProducto() {
     const { id } = useParams();
     const navigate = useNavigate();
     const { agregarAlCarrito } = useCart();
+    const { usuario } = useAuth();
 
     const producto = obtenerProductoPorId(id);
     const [cantidad, setCantidad] = useState(1);
@@ -25,7 +27,7 @@ export default function DetalleProducto() {
             if (guardado) {
                 let parsed = JSON.parse(guardado);
                 
-                // Filtrar y limpiar mensajes antiguos del bot
+                // Filtrar basura antigua
                 parsed = parsed.filter(msj => !msj.texto.includes('Gracias por tu pregunta sobre este artículo') && !msj.texto.includes('Un vendedor te responderá'));
 
                 if (parsed.length > 0) {
@@ -68,14 +70,29 @@ export default function DetalleProducto() {
         e.preventDefault();
         if (!nuevoMensaje.trim()) return;
 
+        // Extraemos solo el primer nombre o 'Visitante'
+        const nombreRemitente = usuario?.nombre ? usuario.nombre.split(' ')[0] : 'Visitante';
+
         const mensajeUsuario = {
             id: Date.now(),
-            texto: nuevoMensaje.trim(),
-            remitente: 'usuario'
+            remitente: 'usuario',
+            autor: nombreRemitente, // Guardamos el autor por separado
+            texto: nuevoMensaje.trim()
         };
 
         setMensajes(prev => [...prev, mensajeUsuario]);
         setNuevoMensaje('');
+    };
+
+    // Función para vaciar/limpiar el historial de prueba de este producto
+    const limpiarHistorial = () => {
+        const mensajeBienvenida = producto 
+            ? `Bienvenido al chat en vivo de ${producto.nombre}` 
+            : 'Bienvenido al chat en vivo';
+        
+        const limpio = [{ id: Date.now(), texto: mensajeBienvenida, remitente: 'sistema' }];
+        setMensajes(limpio);
+        localStorage.setItem(storageKey, JSON.stringify(limpio));
     };
 
     if (!producto) {
@@ -231,14 +248,24 @@ export default function DetalleProducto() {
                         </div>
                     </div>
 
-                    {/* --- CAJA DE CHAT CON NOMBRE SIN PARÉNTESIS --- */}
+                    {/* --- CAJA DE CHAT ESTILIZADA Y CON BOTÓN DE LIMPIAR --- */}
                     <div 
                         className="rounded p-3 shadow-sm"
                         style={{ backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border-subtle)' }}
                     >
-                        <h6 className="fw-bold mb-3 d-flex align-items-center gap-2 text-white">
-                            <span>💬</span> Chat en Vivo {producto.nombre}
-                        </h6>
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h6 className="fw-bold text-white mb-0 d-flex align-items-center gap-2">
+                                <span>💬</span> Chat en Vivo {producto.nombre}
+                            </h6>
+                            <button 
+                                onClick={limpiarHistorial} 
+                                className="btn btn-sm btn-outline-danger py-0 px-2" 
+                                style={{ fontSize: '11px' }}
+                                title="Borrar historial de prueba"
+                            >
+                                Limpiar chat
+                            </button>
+                        </div>
                         
                         {/* Historial de mensajes */}
                         <div 
@@ -259,7 +286,13 @@ export default function DetalleProducto() {
                                         backgroundColor: msj.remitente === 'usuario' ? '#6366f1' : '#e2e8f0' 
                                     }}
                                 >
-                                    {msj.texto}
+                                    {/* Si el mensaje es del usuario, mostramos el nombre arriba en negrita de forma elegante */}
+                                    {msj.remitente === 'usuario' && msj.autor && (
+                                        <div className="fw-bold text-warning" style={{ fontSize: '11px', marginBottom: '2px' }}>
+                                            {msj.autor}
+                                        </div>
+                                    )}
+                                    <div>{msj.texto}</div>
                                 </div>
                             ))}
                         </div>
