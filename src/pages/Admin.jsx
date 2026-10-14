@@ -218,13 +218,14 @@ export default function Admin() {
                                         <th>Nombre</th>
                                         <th>Categoría</th>
                                         <th>Precio</th>
+                                        <th>Stock</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {inventario.length === 0 ? (
                                         <tr>
-                                            <td colSpan="5" className="text-center">No hay productos en el inventario.</td>
+                                            <td colSpan="6" className="text-center">No hay productos en el inventario.</td>
                                         </tr>
                                     ) : (
                                         inventario.map(producto => (
@@ -235,12 +236,25 @@ export default function Admin() {
                                                 <td>{producto.nombre}</td>
                                                 <td><span className="badge bg-secondary">{producto.categoria.toUpperCase()}</span></td>
                                                 <td>${producto.precio.toLocaleString('es-CL')}</td>
-                                                <td>
-                                                    <button className="btn btn-sm btn-outline-primary me-2" onClick={() => editarProducto(producto)} disabled={loading}>
-                                                        ✏️
+                                                <td className="text-nowrap">
+                                                    <span className={`badge ${producto.stock <= (producto.stockCritico || 5) ? 'bg-danger' : 'bg-success'}`}>
+                                                        {producto.stock ?? 0} un.
+                                                    </span>
+                                                </td>
+                                                <td className="text-nowrap">
+                                                    <button
+                                                        className="btn btn-sm btn-outline-primary me-2"
+                                                        onClick={() => editarProducto(producto)}
+                                                        disabled={loading}
+                                                    >
+                                                        Editar
                                                     </button>
-                                                    <button className="btn btn-sm btn-outline-danger" onClick={() => eliminarProducto(producto.id)} disabled={loading}>
-                                                        🗑️
+                                                    <button
+                                                        className="btn btn-sm btn-outline-danger"
+                                                        onClick={() => eliminarProducto(producto.id)}
+                                                        disabled={loading}
+                                                    >
+                                                        Borrar
                                                     </button>
                                                 </td>
                                             </tr>

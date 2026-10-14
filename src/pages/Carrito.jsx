@@ -8,8 +8,8 @@ export default function Carrito() {
     if (carrito.length === 0) {
         return (
             <div className="container mt-5 text-center">
-                <h2>Tu carrito está vacío</h2>
-                <p className="text-muted">¡Parece que aún no has agregado tus mangas o juegos favoritos!</p>
+                <h2 style={{ color: '#ffffff' }}>Tu carrito está vacío</h2>
+                <p style={{ color: '#cbd5e1' }}>¡Parece que aún no has agregado tus mangas o juegos favoritos!</p>
                 <Link to="/catalogo" className="btn btn-primary mt-3">Volver al Catálogo</Link>
             </div>
         );
@@ -17,7 +17,7 @@ export default function Carrito() {
 
     return (
         <div className="container mt-5">
-            <h2 className="mb-4">Tu Carrito ({totalArticulos} artículos)</h2>
+            <h2 className="mb-4" style={{ color: '#ffffff' }}>Tu Carrito ({totalArticulos} artículos)</h2>
             <div className="row">
                 {/* Columna de Productos */}
                 <div className="col-md-8">
@@ -33,8 +33,8 @@ export default function Carrito() {
                                             className="me-3 border rounded"
                                         />
                                         <div>
-                                            <h6 className="my-0 fw-bold text-dark">{producto.nombre}</h6>
-                                            <small className="text-muted">Categoría: {producto.categoria}</small>
+                                            <h6 className="my-0 fw-bold" style={{ color: '#1e293b' }}>{producto.nombre}</h6>
+                                            <small style={{ color: '#64748b' }}>Categoría: {producto.categoria}</small>
                                         </div>
                                     </div>
                                     <div className="d-flex align-items-center gap-3">
@@ -50,10 +50,13 @@ export default function Carrito() {
                                                     }
                                                 }}
                                             >-</button>
-                                            <span className="btn btn-light disabled text-dark">{producto.cantidad}</span>
+                                            <span 
+                                                className="px-3 py-1 fw-bold d-flex align-items-center"
+                                                style={{ backgroundColor: '#f1f5f9', color: '#1e293b', border: '1px solid #dee2e6', minWidth: '40px', justifyContent: 'center' }}
+                                            >{producto.cantidad}</span>
                                             <button className="btn btn-outline-secondary" onClick={() => cambiarCantidad(producto.id, 1)}>+</button>
                                         </div>
-                                        <span className="fw-bold">${(producto.precio * producto.cantidad).toLocaleString('es-CL')}</span>
+                                        <span className="fw-bold" style={{ color: '#1e293b' }}>${(producto.precio * producto.cantidad).toLocaleString('es-CL')}</span>
                                         <button
                                             className="btn btn-sm btn-outline-danger d-flex align-items-center justify-content-center"
                                             style={{ width: '32px', height: '32px', borderRadius: '6px' }}
@@ -76,19 +79,19 @@ export default function Carrito() {
                 {/* Columna de Resumen (Checkout) */}
                 <div className="col-md-4">
                     <div className="card shadow-sm p-4">
-                        <h4 className="mb-3">Resumen de Compra</h4>
+                        <h4 className="mb-3" style={{ color: '#ffffff' }}>Resumen de Compra</h4>
                         <div className="d-flex justify-content-between mb-2">
-                            <span>Subtotal</span>
-                            <span>${totalPlata.toLocaleString('es-CL')}</span>
+                            <span style={{ color: '#cbd5e1' }}>Subtotal</span>
+                            <span style={{ color: '#ffffff' }}>${totalPlata.toLocaleString('es-CL')}</span>
                         </div>
-                        <div className="d-flex justify-content-between mb-3 text-success">
-                            <span>Envío</span>
-                            <span>Gratis</span>
+                        <div className="d-flex justify-content-between mb-3">
+                            <span style={{ color: '#cbd5e1' }}>Envío</span>
+                            <span className="fw-bold" style={{ color: '#10b981' }}>Gratis</span>
                         </div>
-                        <hr />
+                        <hr style={{ borderColor: '#475569' }} />
                         <div className="d-flex justify-content-between mb-4">
-                            <strong>Total a Pagar</strong>
-                            <strong>${totalPlata.toLocaleString('es-CL')}</strong>
+                            <strong style={{ color: '#ffffff' }}>Total a Pagar</strong>
+                            <strong style={{ color: '#ffffff' }}>${totalPlata.toLocaleString('es-CL')}</strong>
                         </div>
                         <button className="btn btn-success w-100 fw-bold"
                             onClick={() => navigate('/pago')}>
