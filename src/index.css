@@ -1220,3 +1220,24 @@ button[title="Buscar"] {
     color: #ffffff !important;
     font-size: 15px !important;
 }
+/* --- Corrección definitiva para el tamaño de las lupas de búsqueda --- */
+.input-group img, 
+.input-group svg, 
+.input-group i,
+.input-group-text svg,
+.input-group-text img {
+  width: 18px !important;
+  height: 18px !important;
+  max-width: 18px !important;
+  max-height: 18px !important;
+  object-fit: contain;
+}
+
+/* Forzar altura armónica en los grupos de búsqueda */
+.input-group .form-control,
+.input-group .input-group-text,
+.input-group .btn {
+  height: 38px !important;
+  display: flex;
+  align-items: center;
+}

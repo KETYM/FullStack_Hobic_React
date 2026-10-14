@@ -22,7 +22,6 @@ import DetalleProducto from './pages/DetalleProducto';
 import Footer from "./components/Footer";
 import Categorias from './pages/Categorias';
 import Ofertas from './pages/Ofertas';
-import ChatVivo from './components/ChatEnVivo';
 
 function App() {
   return (
@@ -65,7 +64,6 @@ function App() {
             </Routes>
           </main>
           <Footer />
-          <ChatVivo /> 
         </BrowserRouter>
       </CartProvider>
     </AuthProvider>
