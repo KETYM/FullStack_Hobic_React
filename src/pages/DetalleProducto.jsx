@@ -1,26 +1,104 @@
 // src/pages/DetalleProducto.jsx
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 import { obtenerProductoPorId } from '../data/mockData';
 
 export default function DetalleProducto() {
-    // useParams: extrae los parámetros de la URL → /producto/prod-001 → { id: 'prod-001' }
     const { id } = useParams();
     const navigate = useNavigate();
     const { agregarAlCarrito } = useCart();
+    const { usuario } = useAuth();
 
-    // Se busca el producto en el inventario (mockData/localStorage)
     const producto = obtenerProductoPorId(id);
-
     const [cantidad, setCantidad] = useState(1);
 
-    // ID inexistente: redirigir al catálogo
+    // --- Estado para el Chat específico de este producto ---
+    const storageKey = `hobic_chat_${id}`;
+    
+    const [mensajes, setMensajes] = useState(() => {
+        const mensajeBienvenida = producto 
+            ? `Bienvenido al chat en vivo de ${producto.nombre}` 
+            : 'Bienvenido al chat en vivo';
+
+        try {
+            const guardado = localStorage.getItem(storageKey);
+            if (guardado) {
+                let parsed = JSON.parse(guardado);
+                
+                // Filtrar basura antigua
+                parsed = parsed.filter(msj => !msj.texto.includes('Gracias por tu pregunta sobre este artículo') && !msj.texto.includes('Un vendedor te responderá'));
+
+                if (parsed.length > 0) {
+                    if (parsed[0].remitente === 'sistema') {
+                        parsed[0].texto = mensajeBienvenida;
+                    }
+                } else {
+                    parsed = [{ id: 1, texto: mensajeBienvenida, remitente: 'sistema' }];
+                }
+                return parsed;
+            }
+        } catch {
+            // Ignorar
+        }
+
+        return [
+            { 
+                id: 1, 
+                texto: mensajeBienvenida, 
+                remitente: 'sistema' 
+            }
+        ];
+    });
+
+    const [nuevoMensaje, setNuevoMensaje] = useState('');
+    const chatScrollRef = useRef(null);
+
+    useEffect(() => {
+        try {
+            localStorage.setItem(storageKey, JSON.stringify(mensajes));
+        } catch {
+            // Ignorar
+        }
+        if (chatScrollRef.current) {
+            chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
+        }
+    }, [mensajes, storageKey]);
+
+    const manejarEnvioChat = (e) => {
+        e.preventDefault();
+        if (!nuevoMensaje.trim()) return;
+
+        // Extraemos solo el primer nombre o 'Visitante'
+        const nombreRemitente = usuario?.nombre ? usuario.nombre.split(' ')[0] : 'Visitante';
+
+        const mensajeUsuario = {
+            id: Date.now(),
+            remitente: 'usuario',
+            autor: nombreRemitente, // Guardamos el autor por separado
+            texto: nuevoMensaje.trim()
+        };
+
+        setMensajes(prev => [...prev, mensajeUsuario]);
+        setNuevoMensaje('');
+    };
+
+    // Función para vaciar/limpiar el historial de prueba de este producto
+    const limpiarHistorial = () => {
+        const mensajeBienvenida = producto 
+            ? `Bienvenido al chat en vivo de ${producto.nombre}` 
+            : 'Bienvenido al chat en vivo';
+        
+        const limpio = [{ id: Date.now(), texto: mensajeBienvenida, remitente: 'sistema' }];
+        setMensajes(limpio);
+        localStorage.setItem(storageKey, JSON.stringify(limpio));
+    };
+
     if (!producto) {
         return <Navigate to="/catalogo" replace />;
     }
 
-    // Alerta de stock bajo (<= stockCritico)
     const stock = producto.stock ?? 10;
     const stockCritico = producto.stockCritico ?? 5;
     const stockBajo = stock <= stockCritico;
@@ -56,7 +134,7 @@ export default function DetalleProducto() {
 
                     <hr className="my-5 border-secondary" />
 
-                    {/* Características: se renderizan desde detalles de forma segura */}
+                    {/* Características */}
                     {producto.detalles && Object.keys(producto.detalles).length > 0 && (
                         <>
                             <h3 className="fs-4 mb-4">Características del producto</h3>
@@ -91,11 +169,11 @@ export default function DetalleProducto() {
                     </p>
                 </div>
 
-                {/* COLUMNA DERECHA: Caja de Compra (Buy Box) */}
+                {/* COLUMNA DERECHA: Caja de Compra (Buy Box) + Chat Integrado */}
                 <div className="col-lg-4">
                     <div
-                        className="rounded p-4 shadow-sm position-sticky"
-                        style={{ top: '20px', backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border-subtle)' }}
+                        className="rounded p-4 shadow-sm mb-4"
+                        style={{ backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border-subtle)' }}
                     >
                         <p className="text-muted small mb-2">{(producto.categoria || 'PRODUCTO').toUpperCase()} | Hobic</p>
                         <h1 className="fs-4 fw-bold mb-3">{producto.nombre}</h1>
@@ -169,6 +247,71 @@ export default function DetalleProducto() {
                             <p className="text-muted small mb-0">Devolución gratis. Tienes 30 días desde que lo recibes.</p>
                         </div>
                     </div>
+
+                    {/* --- CAJA DE CHAT ESTILIZADA Y CON BOTÓN DE LIMPIAR --- */}
+                    <div 
+                        className="rounded p-3 shadow-sm"
+                        style={{ backgroundColor: 'var(--bg-surface-elevated)', border: '1px solid var(--border-subtle)' }}
+                    >
+                        <div className="d-flex justify-content-between align-items-center mb-3">
+                            <h6 className="fw-bold text-white mb-0 d-flex align-items-center gap-2">
+                                <span>💬</span> Chat en Vivo {producto.nombre}
+                            </h6>
+                            <button 
+                                onClick={limpiarHistorial} 
+                                className="btn btn-sm btn-outline-danger py-0 px-2" 
+                                style={{ fontSize: '11px' }}
+                                title="Borrar historial de prueba"
+                            >
+                                Limpiar chat
+                            </button>
+                        </div>
+                        
+                        {/* Historial de mensajes */}
+                        <div 
+                            ref={chatScrollRef}
+                            className="p-2 mb-3 rounded border border-secondary"
+                            style={{ height: '220px', overflowY: 'auto', backgroundColor: '#0a0f1d' }}
+                        >
+                            {mensajes.map((msj) => (
+                                <div
+                                    key={msj.id}
+                                    className={`p-2 mb-2 rounded small ${
+                                        msj.remitente === 'usuario' 
+                                            ? 'ms-auto text-white' 
+                                            : 'me-auto text-dark'
+                                    }`}
+                                    style={{ 
+                                        maxWidth: '85%', 
+                                        backgroundColor: msj.remitente === 'usuario' ? '#6366f1' : '#e2e8f0' 
+                                    }}
+                                >
+                                    {/* Si el mensaje es del usuario, mostramos el nombre arriba en negrita de forma elegante */}
+                                    {msj.remitente === 'usuario' && msj.autor && (
+                                        <div className="fw-bold text-warning" style={{ fontSize: '11px', marginBottom: '2px' }}>
+                                            {msj.autor}
+                                        </div>
+                                    )}
+                                    <div>{msj.texto}</div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Formulario de envío del chat */}
+                        <form onSubmit={manejarEnvioChat} className="d-flex gap-2">
+                            <input
+                                type="text"
+                                className="form-control form-control-sm bg-dark text-white border-secondary shadow-none"
+                                placeholder="Escribe tu mensaje..."
+                                value={nuevoMensaje}
+                                onChange={(e) => setNuevoMensaje(e.target.value)}
+                            />
+                            <button type="submit" className="btn btn-sm btn-primary fw-bold text-nowrap">
+                                Enviar
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
