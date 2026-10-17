@@ -10,13 +10,30 @@ export default function Header() {
     const navigate = useNavigate();
     const [terminoBusqueda, setTerminoBusqueda] = useState('');
 
+    // Función para cerrar el menú desplegable en móviles de forma segura en React
+    const cerrarMenuMovil = () => {
+        const navbar = document.getElementById('navbarHobic');
+        if (navbar && navbar.classList.contains('show')) {
+            // Si Bootstrap está cargado en window, usamos su API
+            if (window.bootstrap && window.bootstrap.Collapse) {
+                const bsCollapse = window.bootstrap.Collapse.getInstance(navbar) || new window.bootstrap.Collapse(navbar);
+                bsCollapse.hide();
+            } else {
+                // Fallback directo quitando la clase show
+                navbar.classList.remove('show');
+            }
+        }
+    };
+
     const handleLogout = () => {
+        cerrarMenuMovil();
         logout();
         navigate('/');
     };
 
     const handleBuscar = (e) => {
         e.preventDefault();
+        cerrarMenuMovil();
         const texto = terminoBusqueda.trim();
         if (texto) {
             navigate(`/catalogo?buscar=${encodeURIComponent(texto)}`);
@@ -30,17 +47,11 @@ export default function Header() {
     const esVendedor = usuario?.rol === 'vendedor';
     const esStaff = esAdmin || esVendedor;
 
-    // Atributos para cerrar el menú en móviles tras hacer clic
-    const closeNav = {
-        'data-bs-toggle': 'collapse',
-        'data-bs-target': '#navbarHobic'
-    };
-
     return (
         <nav className="navbar navbar-expand-lg navbar-dark px-3 py-2 shadow-sm sticky-top" style={{ backgroundColor: '#0d1527' }}>
             <div className="container-fluid">
                 {/* Logo Hobic */}
-                <Link to="/" className="navbar-brand text-white fw-bold fs-3 me-3" style={{ textDecoration: 'none' }}>
+                <Link to="/" className="navbar-brand text-white fw-bold fs-3 me-3" style={{ textDecoration: 'none' }} onClick={cerrarMenuMovil}>
                     HOBI<span style={{ color: '#e0006c' }}>C</span>
                 </Link>
 
@@ -62,13 +73,13 @@ export default function Header() {
                     {/* Enlaces Principales */}
                     <ul className="navbar-nav me-auto mb-3 mb-lg-0 gap-1 gap-lg-2 text-center text-lg-start">
                         <li className="nav-item">
-                            <Link className="nav-link text-white hover-pink fw-semibold" to="/" {...closeNav}>Inicio</Link>
+                            <Link className="nav-link text-white hover-pink fw-semibold" to="/" onClick={cerrarMenuMovil}>Inicio</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white hover-pink fw-semibold" to="/catalogo" {...closeNav}>Catálogo</Link>
+                            <Link className="nav-link text-white hover-pink fw-semibold" to="/catalogo" onClick={cerrarMenuMovil}>Catálogo</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link fw-semibold" to="/ofertas" style={{ color: '#e0006c' }} {...closeNav}>
+                            <Link className="nav-link fw-semibold" to="/ofertas" style={{ color: '#e0006c' }} onClick={cerrarMenuMovil}>
                                 Ofertas
                             </Link>
                         </li>
@@ -82,20 +93,20 @@ export default function Header() {
                                 Categorías
                             </span>
                             <ul className="dropdown-menu dropdown-menu-dark shadow">
-                                <li><Link className="dropdown-item" to="/categoria/libros" {...closeNav}>Libros</Link></li>
-                                <li><Link className="dropdown-item" to="/categoria/mangas" {...closeNav}>Mangas</Link></li>
-                                <li><Link className="dropdown-item" to="/categoria/series" {...closeNav}>Series</Link></li>
-                                <li><Link className="dropdown-item" to="/categoria/videojuegos" {...closeNav}>Videojuegos</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/libros" onClick={cerrarMenuMovil}>Libros</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/mangas" onClick={cerrarMenuMovil}>Mangas</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/series" onClick={cerrarMenuMovil}>Series</Link></li>
+                                <li><Link className="dropdown-item" to="/categoria/videojuegos" onClick={cerrarMenuMovil}>Videojuegos</Link></li>
                             </ul>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white hover-pink fw-semibold" to="/nosotros" {...closeNav}>Nosotros</Link>
+                            <Link className="nav-link text-white hover-pink fw-semibold" to="/nosotros" onClick={cerrarMenuMovil}>Nosotros</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white hover-pink fw-semibold" to="/blogs" {...closeNav}>Blogs</Link>
+                            <Link className="nav-link text-white hover-pink fw-semibold" to="/blogs" onClick={cerrarMenuMovil}>Blogs</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link text-white hover-pink fw-semibold" to="/contacto" {...closeNav}>Contacto</Link>
+                            <Link className="nav-link text-white hover-pink fw-semibold" to="/contacto" onClick={cerrarMenuMovil}>Contacto</Link>
                         </li>
 
                         {/* Control de Acceso Staff */}
@@ -105,12 +116,12 @@ export default function Header() {
                                     ⚙️ Gestión
                                 </span>
                                 <ul className="dropdown-menu dropdown-menu-dark shadow">
-                                    <li><Link className="dropdown-item" to="/admin" {...closeNav}>📦 Inventario</Link></li>
-                                    <li><Link className="dropdown-item" to="/ventas" {...closeNav}>📊 Ventas y Despachos</Link></li>
+                                    <li><Link className="dropdown-item" to="/admin" onClick={cerrarMenuMovil}>📦 Inventario</Link></li>
+                                    <li><Link className="dropdown-item" to="/ventas" onClick={cerrarMenuMovil}>📊 Ventas y Despachos</Link></li>
                                     {esAdmin && (
                                         <>
                                             <li><hr className="dropdown-divider" /></li>
-                                            <li><Link className="dropdown-item text-danger fw-semibold" to="/adminUsuarios" {...closeNav}>👥 Usuarios</Link></li>
+                                            <li><Link className="dropdown-item text-danger fw-semibold" to="/adminUsuarios" onClick={cerrarMenuMovil}>👥 Usuarios</Link></li>
                                         </>
                                     )}
                                 </ul>
@@ -147,18 +158,18 @@ export default function Header() {
                                     {esAdmin && <span className="badge bg-danger ms-1" style={{ fontSize: '10px' }}>Admin</span>}
                                     {esVendedor && <span className="badge bg-warning text-dark ms-1" style={{ fontSize: '10px' }}>Vendedor</span>}
                                 </div>
-                                <button onClick={handleLogout} className="btn btn-sm btn-outline-danger text-nowrap" {...closeNav}>
+                                <button onClick={handleLogout} className="btn btn-sm btn-outline-danger text-nowrap">
                                     Salir
                                 </button>
                             </div>
                         ) : (
-                            <Link to="/inicioSesion" className="btn btn-sm btn-outline-light text-nowrap px-3" {...closeNav}>
+                            <Link to="/inicioSesion" className="btn btn-sm btn-outline-light text-nowrap px-3" onClick={cerrarMenuMovil}>
                                 Ingresar
                             </Link>
                         )}
 
                         {/* Carrito de Compras */}
-                        <Link to="/carrito" className="text-white text-decoration-none position-relative p-2" title="Ver carrito" {...closeNav}>
+                        <Link to="/carrito" className="text-white text-decoration-none position-relative p-2" title="Ver carrito" onClick={cerrarMenuMovil}>
                             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                             </svg>
