@@ -179,8 +179,9 @@ export default function Registro() {
 
                         <div className="row">
                             <div className="col-md-6 mb-3">
-                                <label className="form-label fw-bold small">Región</label>
+                                <label htmlFor="región" className="form-label fw-bold small">Región</label>
                                 <select
+                                    id="región"
                                     name="region"
                                     className={`form-select ${errores.region ? 'is-invalid' : ''}`}
                                     value={formData.region}
@@ -196,8 +197,9 @@ export default function Registro() {
                             </div>
 
                             <div className="col-md-6 mb-3">
-                                <label className="form-label fw-bold small">Comuna</label>
+                                <label htmlFor="comuna" className="form-label fw-bold small">Comuna</label>
                                 <select
+                                    id="comuna"
                                     name="comuna"
                                     className={`form-select ${errores.comuna ? 'is-invalid' : ''}`}
                                     value={formData.comuna}

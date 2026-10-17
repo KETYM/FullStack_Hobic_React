@@ -1,11 +1,13 @@
 // src/tests/mockData.test.jsx
-// Pruebas de la capa de datos: ofertas y CRUD sobre el inventario.
+// Pruebas de la capa de datos: ofertas, CRUD completo y búsquedas.
 import { beforeEach, describe, expect, it } from 'vitest';
 import {
     inicializarInventario,
     obtenerProductos,
+    obtenerProductoPorId,
     obtenerOfertas,
     crearProducto,
+    actualizarProducto,
     eliminarProducto,
 } from '../data/mockData';
 
@@ -49,6 +51,36 @@ describe('mockData - Capa de datos del inventario', () => {
         eliminarProducto(nuevo.id);
         expect(obtenerProductos().length).toBe(totalInicial);
         expect(obtenerProductos().some((p) => p.id === nuevo.id)).toBe(false);
+    });
+
+    it('obtenerProductoPorId devuelve el producto correcto o null', () => {
+        // prod-001 es Dune en el seed
+        const dune = obtenerProductoPorId('prod-001');
+        expect(dune).not.toBeNull();
+        expect(dune.nombre).toContain('Dune');
+        expect(dune.categoria).toBe('libros');
+
+        // ID inexistente devuelve null
+        const noExiste = obtenerProductoPorId('id-falso-999');
+        expect(noExiste).toBeNull();
+    });
+
+    it('actualizarProducto modifica los campos del inventario', () => {
+        // Tomar el primer producto del seed
+        const original = obtenerProductoPorId('prod-001');
+        const precioOriginal = original.precio;
+
+        // Actualizar precio y stock
+        actualizarProducto('prod-001', { precio: 9999, stock: 3 });
+
+        const actualizado = obtenerProductoPorId('prod-001');
+        expect(actualizado.precio).toBe(9999);
+        expect(actualizado.stock).toBe(3);
+        // El nombre NO cambió
+        expect(actualizado.nombre).toBe(original.nombre);
+
+        // Restaurar para no afectar otras pruebas
+        actualizarProducto('prod-001', { precio: precioOriginal, stock: original.stock });
     });
 
 });

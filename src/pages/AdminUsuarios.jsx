@@ -367,13 +367,13 @@ export default function AdminUsuarios() {
                                                     <small className="d-block">{u.direccion || 'Sin dirección'}</small>
                                                     <small className="text-muted">{u.comuna ? `${u.comuna}, ${u.region}` : 'Sin comuna'}</small>
                                                 </td>
-                                                <td className="text-end">
+                                                <td className="text-end text-nowrap">
                                                     <button 
                                                         className="btn btn-sm btn-outline-primary me-2" 
                                                         onClick={() => handleEditar(u)}
                                                         title="Editar usuario"
                                                     >
-                                                        ✏️
+                                                        Editar
                                                     </button>
                                                     <button 
                                                         className="btn btn-sm btn-outline-danger" 
@@ -381,7 +381,7 @@ export default function AdminUsuarios() {
                                                         disabled={esPropio}
                                                         title={esPropio ? "No puedes eliminar tu propia sesión" : "Eliminar usuario"}
                                                     >
-                                                        🗑️
+                                                        Borrar
                                                     </button>
                                                 </td>
                                             </tr>
