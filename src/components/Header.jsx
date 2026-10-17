@@ -31,7 +31,7 @@ export default function Header() {
     const esStaff = esAdmin || esVendedor;
 
     return (
-        <nav className="navbar navbar-expand-xl px-3 py-3 shadow-sm sticky-top" style={{ backgroundColor: '#0d1527' }}>
+        <nav className="navbar navbar-expand-lg navbar-dark px-3 py-2 shadow-sm sticky-top" style={{ backgroundColor: '#0d1527' }}>
             <div className="container-fluid">
                 {/* Logo Hobic */}
                 <Link to="/" className="navbar-brand text-white fw-bold fs-3 me-3" style={{ textDecoration: 'none' }}>
@@ -40,7 +40,7 @@ export default function Header() {
 
                 {/* Botón hamburguesa para móviles */}
                 <button
-                    className="navbar-toggler navbar-dark border-0"
+                    className="navbar-toggler border-0 shadow-none"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarHobic"
@@ -51,9 +51,10 @@ export default function Header() {
                     <span className="navbar-toggler-icon"></span>
                 </button>
 
-                <div className="collapse navbar-collapse" id="navbarHobic">
-                    {/* Enlaces Principales de Navegación */}
-                    <ul className="navbar-nav me-auto mb-2 mb-xl-0 gap-1 gap-xl-2 align-items-xl-center">
+                {/* Menú Colapsable */}
+                <div className="collapse navbar-collapse mt-3 mt-lg-0" id="navbarHobic">
+                    {/* Enlaces Principales */}
+                    <ul className="navbar-nav me-auto mb-3 mb-lg-0 gap-1 gap-lg-2 text-center text-lg-start">
                         <li className="nav-item">
                             <Link className="nav-link text-white hover-pink fw-semibold" to="/">Inicio</Link>
                         </li>
@@ -67,11 +68,10 @@ export default function Header() {
                         </li>
                         <li className="nav-item dropdown">
                             <span
-                                className="nav-link dropdown-toggle text-white fw-semibold"
+                                className="nav-link dropdown-toggle text-white fw-semibold cursor-pointer"
                                 role="button"
                                 data-bs-toggle="dropdown"
                                 aria-expanded="false"
-                                style={{ cursor: 'pointer' }}
                             >
                                 Categorías
                             </span>
@@ -92,25 +92,19 @@ export default function Header() {
                             <Link className="nav-link text-white hover-pink fw-semibold" to="/contacto">Contacto</Link>
                         </li>
 
-                        {/* 🔒 Control de Acceso para Staff (Admin y Vendedor) */}
+                        {/* Control de Acceso Staff */}
                         {esStaff && (
-                            <li className="nav-item dropdown ms-xl-2">
+                            <li className="nav-item dropdown ms-lg-2">
                                 <span className="nav-link dropdown-toggle text-warning fw-bold cursor-pointer" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     ⚙️ Gestión
                                 </span>
                                 <ul className="dropdown-menu dropdown-menu-dark shadow">
-                                    <li>
-                                        <Link className="dropdown-item" to="/admin">📦 Inventario</Link>
-                                    </li>
-                                    <li>
-                                        <Link className="dropdown-item" to="/ventas">📊 Ventas y Despachos</Link>
-                                    </li>
+                                    <li><Link className="dropdown-item" to="/admin">📦 Inventario</Link></li>
+                                    <li><Link className="dropdown-item" to="/ventas">📊 Ventas y Despachos</Link></li>
                                     {esAdmin && (
                                         <>
                                             <li><hr className="dropdown-divider" /></li>
-                                            <li>
-                                                <Link className="dropdown-item text-danger fw-semibold" to="/adminUsuarios">👥 Usuarios</Link>
-                                            </li>
+                                            <li><Link className="dropdown-item text-danger fw-semibold" to="/adminUsuarios">👥 Usuarios</Link></li>
                                         </>
                                     )}
                                 </ul>
@@ -118,25 +112,28 @@ export default function Header() {
                         )}
                     </ul>
 
-                    {/* Barra de Búsqueda Global */}
-                    <form onSubmit={handleBuscar} className="d-flex my-2 my-xl-0 mx-xl-3" role="search" style={{ maxWidth: '320px', width: '100%' }}>
-                        <div className="input-group">
+                    {/* Buscador Ovalado Minimalista */}
+                    <form onSubmit={handleBuscar} className="d-flex mb-3 mb-lg-0 me-lg-3 justify-content-center" role="search">
+                        <div className="input-group navbar-search-pill" style={{ maxWidth: '300px', width: '100%' }}>
+                            <span className="input-group-text bg-transparent border-0 text-white-50 pe-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                </svg>
+                            </span>
                             <input
-                                className="form-control form-control-sm bg-dark text-white border-secondary shadow-none"
+                                className="form-control bg-transparent text-white border-0 shadow-none ps-1"
                                 type="search"
                                 placeholder="Buscar en Hobic..."
                                 aria-label="Buscar"
                                 value={terminoBusqueda}
                                 onChange={(e) => setTerminoBusqueda(e.target.value)}
+                                style={{ fontSize: '0.88rem' }}
                             />
-                            <button className="btn btn-sm btn-outline-light" type="submit">
-                                🔍
-                            </button>
                         </div>
                     </form>
 
                     {/* Controles de Sesión y Carrito */}
-                    <div className="d-flex align-items-center gap-3 mt-3 mt-xl-0">
+                    <div className="d-flex align-items-center justify-content-center gap-3">
                         {usuario ? (
                             <div className="d-flex align-items-center gap-2">
                                 <div className="text-white small text-nowrap">
@@ -149,20 +146,18 @@ export default function Header() {
                                 </button>
                             </div>
                         ) : (
-                            <Link to="/inicioSesion" className="btn btn-sm btn-outline-light text-nowrap">
+                            <Link to="/inicioSesion" className="btn btn-sm btn-outline-light text-nowrap px-3">
                                 Ingresar
                             </Link>
                         )}
 
-                        {/* Botón de Carrito con Contador */}
-                        <Link to="/carrito" className="btn btn-warning position-relative px-3 d-flex align-items-center" title="Ver carrito">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <circle cx="8" cy="21" r="1" />
-                                <circle cx="19" cy="21" r="1" />
-                                <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                        {/* Carrito de Compras en blanco plano */}
+                        <Link to="/carrito" className="text-white text-decoration-none position-relative p-2" title="Ver carrito">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                             </svg>
                             {totalArticulos > 0 && (
-                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style={{ fontSize: '10px' }}>
                                     {totalArticulos}
                                 </span>
                             )}
