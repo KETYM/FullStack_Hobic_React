@@ -113,15 +113,15 @@ export default function Header() {
                         {esStaff && (
                             <li className="nav-item dropdown ms-lg-2">
                                 <span className="nav-link dropdown-toggle text-warning fw-bold cursor-pointer" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    ⚙️ Gestión
+                                    Gestión
                                 </span>
                                 <ul className="dropdown-menu dropdown-menu-dark shadow">
-                                    <li><Link className="dropdown-item" to="/admin" onClick={cerrarMenuMovil}>📦 Inventario</Link></li>
-                                    <li><Link className="dropdown-item" to="/ventas" onClick={cerrarMenuMovil}>📊 Ventas y Despachos</Link></li>
+                                    <li><Link className="dropdown-item" to="/admin" onClick={cerrarMenuMovil}>Inventario</Link></li>
+                                    <li><Link className="dropdown-item" to="/ventas" onClick={cerrarMenuMovil}>Ventas y Despachos</Link></li>
                                     {esAdmin && (
                                         <>
                                             <li><hr className="dropdown-divider" /></li>
-                                            <li><Link className="dropdown-item text-danger fw-semibold" to="/adminUsuarios" onClick={cerrarMenuMovil}>👥 Usuarios</Link></li>
+                                            <li><Link className="dropdown-item text-danger fw-semibold" to="/adminUsuarios" onClick={cerrarMenuMovil}>Usuarios</Link></li>
                                         </>
                                     )}
                                 </ul>

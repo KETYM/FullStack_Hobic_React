@@ -11,6 +11,66 @@
     box-shadow: none;
 }
 
+/* Cursor pointer para elementos clicable sin ser <a> o <button> */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Dropdown: asegurar posicionamiento y fondo aunque style.css use !important */
+.navbar .dropdown-menu {
+    position: absolute !important;
+    z-index: 1000;
+    background-color: #1a243d !important;
+    border: 1px solid #232f48 !important;
+    min-width: 180px;
+}
+
+.navbar .dropdown-menu .dropdown-item {
+    color: #e2e8f0 !important;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.navbar .dropdown-menu .dropdown-item:hover {
+    background-color: #2d3a54 !important;
+    color: #ffffff !important;
+}
+
+/* Colapsar el nav en móvil: forzar display none cuando no tiene .show */
+@media (max-width: 991.98px) {
+    .navbar .navbar-collapse:not(.show) {
+        display: none !important;
+    }
+
+    .navbar .navbar-collapse.show {
+        display: block !important;
+        width: 100%;
+    }
+
+    /* Los nav-items en móvil se apilan verticalmente */
+    .navbar .navbar-nav {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .navbar .navbar-nav .nav-link {
+        padding: 10px 12px;
+        text-align: left;
+    }
+
+    /* El dropdown en móvil se muestra inline, no flotante */
+    .navbar .dropdown-menu {
+        position: static !important;
+        float: none;
+        width: 100%;
+        margin-top: 0;
+        border: none;
+        border-left: 3px solid #e0006c;
+        border-radius: 0;
+    }
+}
+
 /* Corrección de la barra de búsqueda en el Navbar */
 .navbar form[role="search"] .input-group {
     align-items: stretch;
